@@ -21,12 +21,12 @@ The program's defaults should work on a fresh Windows 10 and Ubuntu install (mac
 
 The program should also be easily flexible to allow easy configuration to work on whatever esoteric system you can conjure.
 
-## Flexibility
+### Flexibility
 If you can do it in a shell, you can do it better in Open Smart Shutdown.
 You should also be able to montior as many events with each monitor being
 highly configurable (e.g., buffers to prevent false negatives, polling rates, customizable ranges of positive values)
 
-## Ease of Use
+### Ease of Use
 The program should let you use its flexibility to the fullest without fighting you.
 This is a tool that should work for you so you shouldn't have to work for the tool.
 
