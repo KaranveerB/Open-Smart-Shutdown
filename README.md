@@ -16,7 +16,7 @@ This can be used in cases like
 and you can perform the finish task in a shell, you should be able to do it in Open Smart Shutdown.
 
 ## Goals of the Project
-### Compatability
+### Compatibility
 The program's defaults should work on a fresh Windows 10 and Ubuntu install (macOS is not included as I don't have a system to test on).
 
 The program should also be easily flexible to allow easy configuration to work on whatever esoteric system you can conjure.
