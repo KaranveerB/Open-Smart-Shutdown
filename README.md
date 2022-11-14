@@ -12,15 +12,14 @@ whether that be monitoring an event or performing a non-shutdown command.
 This can be used in cases like
 * Killing an RDP service after extended inactivity
 * Send a notification to a phone when a process has ended
-* Anything else you can do with a shell really. If you can monitor it in a shell with a tool like awk, and you can
-* If you can monitor what you want to monitor with a shell and  a tool like awk, 
+* Anything else you can do with a shell really. If you can monitor what you want in a shell 
 and you can perform the finish task in a shell, you should be able to do it in Open Smart Shutdown.
 
 ## Goals of the Project
 ### Compatability
 The program's defaults should work on a fresh Windows 10 and Ubuntu install (macOS is not included as I don't have a system to test on).
 
-The program should also be easily flexible to easily be configured to work on whatever esoteric system you can conjure.
+The program should also be easily flexible to allow easy configuration to work on whatever esoteric system you can conjure.
 
 ## Flexibility
 If you can do it in a shell, you can do it better in Open Smart Shutdown.
