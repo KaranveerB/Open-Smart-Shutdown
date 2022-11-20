@@ -1,13 +1,26 @@
-#ifndef OPEN_SMART_SHUTDOWN_STATE_READER_H
-#define OPEN_SMART_SHUTDOWN_STATE_READER_H
+#pragma once
 
-#include <ctime>
+#include "state_evaluator/state_evaluator.h"
 
-template<typename T>
-class StateReader {
+class IStateReader {
 public:
-	virtual T getStateValue() = 0;
+	virtual bool getStateActive() = 0;
 };
 
 
-#endif //OPEN_SMART_SHUTDOWN_STATE_READER_H
+template<class T>
+class StateReader : public IStateReader {
+public:
+	bool getStateActive() override {
+		return evaluator->evaluateState(getStateValue());
+	};
+protected:
+	virtual T getStateValue() = 0;
+
+	void setEvaluator(StateEvaluator<T> *newEvaluator) {
+		evaluator = newEvaluator;
+	}
+
+private:
+	StateEvaluator<T> *evaluator;
+};
