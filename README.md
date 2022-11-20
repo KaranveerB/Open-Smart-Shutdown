@@ -1,5 +1,5 @@
 # Open Smart Shutdown (WIP)
-A cross-platform, open source tool to automate conditional shutdowns, similar to [AMP WinOFF](http://www.ampsoft.net/utilities/WinOFF.php).
+A QT based cross-platform open source tool to automate conditional shutdowns, similar to [AMP WinOFF](http://www.ampsoft.net/utilities/WinOFF.php).
 
 This can help in various cases such as 
 * Shutdown after downloading a game (based on low network and disk usage)
@@ -19,7 +19,7 @@ and you can perform the finish task in a shell, you should be able to do it in O
 ### Compatibility
 The program's defaults should work on a fresh Windows 10 and Ubuntu install (macOS is not included as I don't have a system to test on).
 
-The program should also be easily flexible to allow easy configuration to work on whatever esoteric system you can conjure.
+The program should also be easily flexible to allow easy configuration to work on whatever Windows, Linux, or macOS system you can conjure.
 
 ### Flexibility
 If you can do it in a shell, you can do it better in Open Smart Shutdown.
