@@ -15,7 +15,7 @@ set(state_evaluator_files
 
 set(state_reader_files
         core/state_monitor/state_reader/state_reader.h
-        core/state_monitor/state_reader/state_reader.tpp
+        core/state_monitor/state_monitor.tpp
         core/state_monitor/state_reader/time_state_reader.cpp
         core/state_monitor/state_reader/time_state_reader.h)
 

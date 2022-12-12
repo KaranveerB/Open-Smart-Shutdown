@@ -9,18 +9,19 @@
 #include "state_evaluator/in_range_state_evaluator.h"
 #include "state_reader/state_reader.h"
 #include "state_reader/time_state_reader.h"
+#include "state_monitor.h"
 
 
 class StateMonitorManager {
 private:
     class ScheduledStateReader {
     public:
-        explicit ScheduledStateReader(IStateReader *stateReader) :
+        explicit ScheduledStateReader(IStateMonitor *stateReader) :
                 stateReader(stateReader),
                 scheduledTime(std::chrono::steady_clock::now() + stateReader->getPollingInterval()) {};
 
 
-        IStateReader *getStateReader() {
+        IStateMonitor *getStateReader() {
             return stateReader;
         }
 
@@ -35,24 +36,24 @@ private:
         };
 
     private:
-        IStateReader *stateReader;
+        IStateMonitor *stateReader;
         std::chrono::time_point<std::chrono::steady_clock> scheduledTime;
 
     };
 
 public:
-    void addStateReader(IStateReader *stateReader);
+    void addStateMonitor(IStateMonitor *stateMonitor);
 
     void startMonitor();
 
 private:
     void setupScheduledStateReaderQueue();
 
-    void scheduleStateReader(IStateReader *stateReader);
+    void scheduleStateReader(IStateMonitor *stateReader);
 
     void monitorStates();
 
-    std::vector<IStateReader *> stateReaders;
+    std::vector<IStateMonitor *> stateMonitors;
     std::priority_queue<ScheduledStateReader,
             std::vector<ScheduledStateReader>,
             ScheduledStateReader::compare> scheduledStateReaderQueue;

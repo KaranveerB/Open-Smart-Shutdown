@@ -1,7 +1,8 @@
 #include "state_monitor_manager.h"
+#include "state_monitor.h"
 
-void StateMonitorManager::addStateReader(IStateReader *stateReader) {
-    stateReaders.push_back(stateReader);
+void StateMonitorManager::addStateMonitor(IStateMonitor *stateMonitor) {
+    stateMonitors.push_back(stateMonitor);
 }
 
 void StateMonitorManager::startMonitor() {
@@ -17,9 +18,9 @@ void StateMonitorManager::monitorStates() {
         ScheduledStateReader scheduledSR = scheduledStateReaderQueue.top();
         if (scheduledSR.isReady()) {
             scheduledStateReaderQueue.pop();
-            auto* sr = scheduledSR.getStateReader();
-            ret = sr->getStateActive();
-            scheduleStateReader(sr); // reschedule state reader
+            auto* sm = scheduledSR.getStateReader();
+            ret = sm->getStateActive();
+            scheduleStateReader(sm); // reschedule state reader
         } else {
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
@@ -33,12 +34,12 @@ void StateMonitorManager::setupScheduledStateReaderQueue() {
             ScheduledStateReader::compare>();
 
     // load scheduled tasks
-    for (auto* sr : stateReaders) {
-        scheduleStateReader(sr);
+    for (auto* sm : stateMonitors) {
+        scheduleStateReader(sm);
     }
 }
 
-void StateMonitorManager::scheduleStateReader(IStateReader *stateReader) {
+void StateMonitorManager::scheduleStateReader(IStateMonitor *stateReader) {
     scheduledStateReaderQueue.emplace(stateReader);
 }
 
