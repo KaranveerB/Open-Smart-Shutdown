@@ -5,14 +5,18 @@
 #include <thread>
 #include <vector>
 
+#include <QList>
+
 #include "state_evaluator/state_evaluator.h"
 #include "state_evaluator/in_range_state_evaluator.h"
 #include "state_reader/state_reader.h"
 #include "state_reader/time_state_reader.h"
 #include "state_monitor.h"
+#include "state.h"
 
 
-class StateMonitorManager {
+class StateMonitorManager : public QObject {
+Q_OBJECT
 private:
     class ScheduledStateReader {
     public:
@@ -31,7 +35,7 @@ private:
 
         struct compare {
             bool operator()(const ScheduledStateReader &a, const ScheduledStateReader &b) const {
-                return a.scheduledTime <= b.scheduledTime;
+                return a.scheduledTime < b.scheduledTime;
             }
         };
 
@@ -46,6 +50,8 @@ public:
 
     void startMonitor();
 
+    QList<StateQObject *> *states = new QList<StateQObject *>;
+
 private:
     void setupScheduledStateReaderQueue();
 
@@ -58,4 +64,7 @@ private:
             std::vector<ScheduledStateReader>,
             ScheduledStateReader::compare> scheduledStateReaderQueue;
 
+signals:
+    void stateChanged();
+    void monitoredStatesChanged();
 };

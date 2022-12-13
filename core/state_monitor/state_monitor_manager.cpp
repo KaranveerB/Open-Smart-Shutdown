@@ -1,15 +1,17 @@
 #include "state_monitor_manager.h"
 #include "state_monitor.h"
+#include "events/event_triggers.h"
 
 void StateMonitorManager::addStateMonitor(IStateMonitor *stateMonitor) {
     stateMonitors.push_back(stateMonitor);
+    states->emplace_back(new StateQObject("TEST NAME"));
+    emit monitoredStatesChanged();
 }
 
 void StateMonitorManager::startMonitor() {
     setupScheduledStateReaderQueue();
     std::thread stateMonitorThread(&StateMonitorManager::monitorStates, this);
     stateMonitorThread.detach();
-//    stateMonitorThread.join();
 }
 
 void StateMonitorManager::monitorStates() {
@@ -25,6 +27,7 @@ void StateMonitorManager::monitorStates() {
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
     }
+    emit stateChanged();
     std::cout << "task completed" << std::endl;
 }
 
