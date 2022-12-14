@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <map>
 #include <queue>
 #include <thread>
 #include <vector>
@@ -13,6 +14,7 @@
 #include "state_reader/time_state_reader.h"
 #include "state_monitor.h"
 #include "state.h"
+#include "events/event_triggers.h"
 
 
 class StateMonitorManager : public QObject {
@@ -20,9 +22,10 @@ Q_OBJECT
 private:
     class ScheduledStateReader {
     public:
-        explicit ScheduledStateReader(IStateMonitor *stateReader) :
-                stateReader(stateReader),
-                scheduledTime(std::chrono::steady_clock::now() + stateReader->getPollingInterval()) {};
+        explicit ScheduledStateReader(unsigned int id, IStateMonitor *stateReader) :
+                stateReader{stateReader},
+                id{id},
+                scheduledTime{std::chrono::steady_clock::now() + stateReader->getPollingInterval()} {};
 
 
         IStateMonitor *getStateReader() {
@@ -31,6 +34,10 @@ private:
 
         bool isReady() {
             return scheduledTime <= std::chrono::steady_clock::now();
+        }
+
+        unsigned int getId() const {
+            return id;
         }
 
         struct compare {
@@ -42,29 +49,32 @@ private:
     private:
         IStateMonitor *stateReader;
         std::chrono::time_point<std::chrono::steady_clock> scheduledTime;
-
+        unsigned int id;
     };
 
 public:
-    void addStateMonitor(IStateMonitor *stateMonitor);
+    void addStateMonitor(IStateMonitor *stateMonitor, unsigned int id);
 
     void startMonitor();
 
-    QList<StateQObject *> *states = new QList<StateQObject *>;
+    State *getState(unsigned int id);
 
 private:
-    void setupScheduledStateReaderQueue();
+    void scheduleStateReader(unsigned int id, IStateMonitor *stateMonitor);
 
-    void scheduleStateReader(IStateMonitor *stateReader);
+    [[noreturn]] void monitorStates();
 
-    void monitorStates();
+    std::priority_queue<ScheduledStateReader, std::vector<ScheduledStateReader>,
+            ScheduledStateReader::compare> scheduledStateReaderQueue =
+            std::priority_queue<ScheduledStateReader, std::vector<ScheduledStateReader>,
+                    ScheduledStateReader::compare>();
 
-    std::vector<IStateMonitor *> stateMonitors;
-    std::priority_queue<ScheduledStateReader,
-            std::vector<ScheduledStateReader>,
-            ScheduledStateReader::compare> scheduledStateReaderQueue;
+    std::thread stateMonitorThread;
 
+    std::unordered_map<unsigned int, State *> statesMap;
 signals:
+
     void stateChanged();
+
     void monitoredStatesChanged();
 };

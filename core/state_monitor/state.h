@@ -4,11 +4,19 @@
 #include <QString>
 #include <utility>
 
-class StateQObject : public QObject {
+class State : public QObject {
 Q_OBJECT
-    QString name;
+public:
+    bool getState() const {
+        return state;
+    }
+
+    void setState(bool newState) {
+        state = newState;
+    }
+
+private:
     bool state = false;
-    explicit StateQObject(QString name) : name{std::move(name)} {};
 
     friend class StateMonitorManager;
 };
