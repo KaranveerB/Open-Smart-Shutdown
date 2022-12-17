@@ -8,7 +8,7 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QWidget(parent
 
     // TODO: remove test code
     auto *eval = new InRangeStateEvaluator<std::chrono::time_point<std::chrono::system_clock>>(
-            std::chrono::system_clock::now() + std::chrono::seconds(10),
+            std::chrono::system_clock::now() + std::chrono::seconds(5),
             std::chrono::system_clock::now() + std::chrono::hours(1));
     auto *sr = new TimeStateReader;
     auto *sm = new StateMonitor<std::chrono::time_point<std::chrono::system_clock>>
@@ -18,14 +18,14 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QWidget(parent
 
     stateMonitorManager.startMonitor();
 
-    QObject::connect(&stateMonitorManager, SIGNAL(stateChanged()), this, SLOT(updateStateMonitorWidgets()));
+//    QObject::connect(&stateMonitorManager, &StateMonitorManager::stateChanged, this, &MainStateMonitorWidget::updateStateMonitorWidgets);
     // TODO: Move updating widget logic to sub-widgets. Pass new state in stateChanged()
 }
 
 void MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, unsigned int id, QString name) {
     stateMonitorManager.addStateMonitor(sm, id);
     auto *newStateMonitorWidget = new StateMonitorWidget(id, std::move(name),
-                                                         *stateMonitorManager.getState(id), this);
+                                                         stateMonitorManager, this);
     stateMonitorListLayout->addWidget(newStateMonitorWidget);
 }
 

@@ -57,7 +57,7 @@ public:
 
     void startMonitor();
 
-    State *getState(unsigned int id);
+    State *getState(unsigned int id) const;
 
 private:
     void scheduleStateReader(unsigned int id, IStateMonitor *stateMonitor);
@@ -74,7 +74,7 @@ private:
     std::unordered_map<unsigned int, State *> statesMap;
 signals:
 
-    void stateChanged();
+    void stateChanged(unsigned int id, State *state);
 
     void monitoredStatesChanged();
 };

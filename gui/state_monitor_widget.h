@@ -4,17 +4,21 @@
 #include <QLabel>
 #include <QWidget>
 
+#include "state_monitor_manager.h"
 #include "state.h"
 
 class StateMonitorWidget : public QWidget {
 public:
-    StateMonitorWidget(unsigned int id, QString name, State &state, QWidget *parent = nullptr);
+    StateMonitorWidget(unsigned int id, QString name, const StateMonitorManager &stateMonitorManager, QWidget *parent = nullptr);
 
     void updateState(State &state);
 
     unsigned int getId();
-private:
 
+private slots:
+    void updateStateMonitorWidget(unsigned int id, State *state);
+
+private:
     unsigned int id;
     QLabel *nameLabel;
     QLabel *stateLabel;

@@ -9,8 +9,8 @@ void StateMonitorManager::addStateMonitor(IStateMonitor *stateMonitor, unsigned 
     emit monitoredStatesChanged();
 }
 
-State *StateMonitorManager::getState(unsigned int id) {
-    return statesMap[id];
+State *StateMonitorManager::getState(unsigned int id) const {
+    return statesMap.at(id);
 }
 
 void StateMonitorManager::startMonitor() {
@@ -24,9 +24,10 @@ void StateMonitorManager::startMonitor() {
         if (scheduledSR.isReady()) {
             scheduledStateReaderQueue.pop();
             auto *sm = scheduledSR.getStateReader();
-            statesMap[scheduledSR.getId()]->setState(sm->getStateActive());
-            scheduleStateReader(scheduledSR.getId(), sm); // reschedule state reader
-            emit stateChanged();
+            unsigned int id = scheduledSR.getId();
+            statesMap[id]->setState(sm->getStateActive());
+            emit stateChanged(id, statesMap.at(id));
+            scheduleStateReader(id, sm); // reschedule state reader
         } else {
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
