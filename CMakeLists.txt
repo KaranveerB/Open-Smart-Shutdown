@@ -41,7 +41,11 @@ set(triggered_executions_files
 set(gui_files
         gui/main.cpp
         gui/main_window.cpp
-        gui/main_window.h)
+        gui/main_window.h
+        gui/main_state_monitor_widget.cpp
+        gui/main_state_monitor_widget.h
+        gui/state_monitor_widget.cpp
+        gui/state_monitor_widget.h)
 
 
 add_executable(open_smart_shutdown

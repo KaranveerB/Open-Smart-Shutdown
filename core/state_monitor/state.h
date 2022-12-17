@@ -16,7 +16,7 @@ public:
     }
 
 private:
-    bool state = false;
+    bool state = false; // TODO: Make state thread safe
 
     friend class StateMonitorManager;
 };
