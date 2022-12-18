@@ -7,9 +7,9 @@
 
 class IStateMonitor {
 public:
-    virtual bool getStateActive() = 0;
+    virtual bool getStateActive() const = 0;
 
-    virtual std::chrono::duration<int64_t> getPollingInterval() = 0;
+    virtual std::chrono::duration<int64_t> getPollingInterval() const = 0;
 };
 
 template<class T>
@@ -23,9 +23,9 @@ public:
                                                                    stateEvaluator{stateEvaluator},
                                                                    pollingInterval{pollingInterval} {};
 
-    bool getStateActive() override;
+    bool getStateActive() const override;
 
-    std::chrono::duration<int64_t> getPollingInterval() override;
+    std::chrono::duration<int64_t> getPollingInterval() const override;
 
 private:
     StateReader<T> *stateReader;

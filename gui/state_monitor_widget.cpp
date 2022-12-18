@@ -30,7 +30,7 @@ void StateMonitorWidget::updateState(State &state) {
     stateLabel->setText(stateQString);
 }
 
-unsigned int StateMonitorWidget::getId() {
+unsigned int StateMonitorWidget::getId() const {
     return id;
 }
 

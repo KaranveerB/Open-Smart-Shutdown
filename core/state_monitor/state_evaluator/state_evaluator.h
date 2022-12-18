@@ -3,5 +3,5 @@
 template <class T>
 class StateEvaluator {
 public:
-	virtual bool evaluateState(T state) = 0;
+	virtual bool evaluateState(T state) const = 0;
 };

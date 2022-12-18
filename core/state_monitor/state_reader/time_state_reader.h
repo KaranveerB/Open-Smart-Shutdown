@@ -8,5 +8,5 @@
 
 class TimeStateReader : public StateReader<std::chrono::time_point<std::chrono::system_clock>> {
 public:
-    std::chrono::time_point<std::chrono::system_clock> getStateValue() override;
+    std::chrono::time_point<std::chrono::system_clock> getStateValue() const override;
 };

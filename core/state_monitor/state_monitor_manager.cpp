@@ -37,5 +37,3 @@ void StateMonitorManager::startMonitor() {
 void StateMonitorManager::scheduleStateReader(unsigned int id, IStateMonitor *stateMonitor) {
     scheduledStateReaderQueue.emplace(id, stateMonitor);
 }
-
-

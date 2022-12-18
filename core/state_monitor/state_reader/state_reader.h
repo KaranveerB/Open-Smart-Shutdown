@@ -7,5 +7,5 @@
 template<class T>
 class StateReader {
 public:
-    virtual T getStateValue() = 0;
+    virtual T getStateValue() const = 0;
 };

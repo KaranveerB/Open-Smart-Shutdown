@@ -74,7 +74,7 @@ private:
     std::unordered_map<unsigned int, State *> statesMap;
 signals:
 
-    void stateChanged(unsigned int id, State *state);
+    void stateChanged(unsigned int id, State *state) const;
 
-    void monitoredStatesChanged();
+    void monitoredStatesChanged() const;
 };

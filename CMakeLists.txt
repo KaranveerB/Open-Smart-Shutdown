@@ -6,6 +6,8 @@ set(QT6_INSTALL_PATH D:/pkg/Qt/6.3.1/mingw_64) # Ignore this if CMake can find Q
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
 
 include_directories(core/state_monitor gui)
 

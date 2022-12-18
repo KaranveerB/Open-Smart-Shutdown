@@ -13,7 +13,7 @@ public:
 
     void updateState(State &state);
 
-    unsigned int getId();
+    unsigned int getId() const;
 
 private slots:
     void updateStateMonitorWidget(unsigned int id, State *state);
