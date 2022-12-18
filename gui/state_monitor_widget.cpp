@@ -16,8 +16,11 @@ StateMonitorWidget::StateMonitorWidget(unsigned int id, QString name, const Stat
     qhBoxLayout->addWidget(nameLabel);
     qhBoxLayout->addWidget(stateLabel);
 
-    // TODO: Why does Clion give error for connect?
-    QObject::connect(&stateMonitorManager, &StateMonitorManager::stateChanged, this, &StateMonitorWidget::updateStateMonitorWidget);
+    // Clion error for connect: "constexpr variable 'begin' must be initialized by a
+    // constant expression" can be safely ignored here (likely bug in clion).
+    // Error isn't present with SIGNAL() SLOT(), but using current approach leads to compile-time type-checking
+    QObject::connect(&stateMonitorManager, &StateMonitorManager::stateChanged,
+                     this, &StateMonitorWidget::updateStateMonitorWidget);
 }
 
 void StateMonitorWidget::updateState(State &state) {
