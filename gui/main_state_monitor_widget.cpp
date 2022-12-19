@@ -26,15 +26,6 @@ void MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, unsigned int id,
     stateMonitorListLayout->addWidget(newStateMonitorWidget);
 }
 
-void MainStateMonitorWidget::updateStateMonitorWidgets() {
-    int size = stateMonitorListLayout->count();
-    for (int i = 0; i < size; i++) {
-        auto stateMonitorWidget = (StateMonitorWidget *) stateMonitorListLayout->itemAt(i)->widget();
-        unsigned int id = stateMonitorWidget->getId();
-        stateMonitorWidget->updateState(*stateMonitorManager.getState(id));
-    }
-}
-
 void MainStateMonitorWidget::createNewStateMonitor() {
     StateMonitorCreatorWidget smCreatorWidget;
     smCreatorWidget.exec();

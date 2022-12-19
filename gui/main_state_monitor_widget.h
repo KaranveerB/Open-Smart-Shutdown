@@ -18,9 +18,6 @@ public:
     void addStateMonitor(IStateMonitor *sm, unsigned int id, QString name); // TODO: Add proper fields
 
 public slots:
-
-    void updateStateMonitorWidgets();
-
     void createNewStateMonitor();
 
 private:
