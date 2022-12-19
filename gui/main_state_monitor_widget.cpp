@@ -17,9 +17,6 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QWidget(parent
     addStateMonitor(sm, 0, "Test SM");
 
     stateMonitorManager.startMonitor();
-
-//    QObject::connect(&stateMonitorManager, &StateMonitorManager::stateChanged, this, &MainStateMonitorWidget::updateStateMonitorWidgets);
-    // TODO: Move updating widget logic to sub-widgets. Pass new state in stateChanged()
 }
 
 void MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, unsigned int id, QString name) {
@@ -35,5 +32,15 @@ void MainStateMonitorWidget::updateStateMonitorWidgets() {
         auto stateMonitorWidget = (StateMonitorWidget *) stateMonitorListLayout->itemAt(i)->widget();
         unsigned int id = stateMonitorWidget->getId();
         stateMonitorWidget->updateState(*stateMonitorManager.getState(id));
+    }
+}
+
+void MainStateMonitorWidget::createNewStateMonitor() {
+    StateMonitorCreatorWidget smCreatorWidget;
+    smCreatorWidget.exec();
+    if (smCreatorWidget.result() == QDialog::Accepted) {
+        IStateMonitor* stateMonitor = smCreatorWidget.getStateMonitor();
+        QString name = smCreatorWidget.getStateMonitorName();
+        MainStateMonitorWidget::addStateMonitor(stateMonitor, 0, name);
     }
 }

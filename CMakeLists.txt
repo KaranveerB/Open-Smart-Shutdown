@@ -26,13 +26,13 @@ set(state_monitor_files
 set(state_evaluator_files
         core/state_monitor/state_evaluator/state_evaluator.h
         core/state_monitor/state_evaluator/in_range_state_evaluator.tpp
-        core/state_monitor/state_evaluator/in_range_state_evaluator.h)
+        core/state_monitor/state_evaluator/in_range_state_evaluator.h core/state_monitor/state_evaluator/state_evaluator_master.h)
 
 set(state_reader_files
         core/state_monitor/state_reader/state_reader.h
         core/state_monitor/state_monitor.tpp
         core/state_monitor/state_reader/time_state_reader.cpp
-        core/state_monitor/state_reader/time_state_reader.h)
+        core/state_monitor/state_reader/time_state_reader.h core/state_monitor/state_reader/state_reader_master.h)
 
 set(triggered_executions_files
         core/state_monitor/events/event_triggers.cpp
