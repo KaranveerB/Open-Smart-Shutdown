@@ -1,7 +1,7 @@
 #pragma once
 
-template <class T>
+template<class T>
 class StateEvaluator {
 public:
-	virtual bool evaluateState(T state) const = 0;
+    virtual bool evaluateState(T state) const = 0;
 };

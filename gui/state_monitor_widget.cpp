@@ -1,6 +1,7 @@
 #include "state_monitor_widget.h"
 
-StateMonitorWidget::StateMonitorWidget(unsigned int id, QString name, const StateMonitorManager &stateMonitorManager, QWidget *parent)
+StateMonitorWidget::StateMonitorWidget(unsigned int id, QString name, const StateMonitorManager &stateMonitorManager,
+                                       QWidget *parent)
         : id{id},
           QWidget(parent) {
 
