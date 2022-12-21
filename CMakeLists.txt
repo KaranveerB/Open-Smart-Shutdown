@@ -26,7 +26,10 @@ set(state_monitor_files
 set(state_evaluator_files
         core/state_monitor/state_evaluator/state_evaluator.h
         core/state_monitor/state_evaluator/in_range_state_evaluator.tpp
-        core/state_monitor/state_evaluator/in_range_state_evaluator.h core/state_monitor/state_evaluator/state_evaluator_master.h)
+        core/state_monitor/state_evaluator/in_range_state_evaluator.h
+        core/state_monitor/state_evaluator/state_evaluator_master.h
+        core/state_monitor/state_evaluator/greater_than_state_evaluator.tpp
+        core/state_monitor/state_evaluator/greater_than_state_evaluator.h)
 
 set(state_reader_files
         core/state_monitor/state_reader/state_reader.h

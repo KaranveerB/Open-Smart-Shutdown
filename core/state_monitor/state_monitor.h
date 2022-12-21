@@ -16,12 +16,20 @@ template<class T>
 class StateMonitor : public IStateMonitor {
 public:
     StateMonitor(StateReader<T> *stateReader, StateEvaluator<T> *stateEvaluator) : stateReader{stateReader},
-                                                                                   stateEvaluator{stateEvaluator} {};
+                                                                                   stateEvaluator{stateEvaluator} {
+        if (stateReader == nullptr || stateEvaluator == nullptr) {
+            throw std::logic_error("can't create state monitor with nullptr state reader or state evaluator");
+        }
+    };
 
     StateMonitor(StateReader<T> *stateReader, StateEvaluator<T> *stateEvaluator,
                  std::chrono::duration<int64_t> pollingInterval) : stateReader{stateReader},
                                                                    stateEvaluator{stateEvaluator},
-                                                                   pollingInterval{pollingInterval} {};
+                                                                   pollingInterval{pollingInterval} {
+        if (stateReader == nullptr || stateEvaluator == nullptr) {
+            throw std::logic_error("can't create state monitor with nullptr state reader or state evaluator");
+        }
+    };
 
     bool getStateActive() const override;
 

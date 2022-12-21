@@ -2,7 +2,7 @@
 
 void StateMonitorManager::addStateMonitor(IStateMonitor *stateMonitor, unsigned int id) {
     if (statesMap.find(id) != statesMap.end()) {
-        throw std::logic_error("invalid ID for state monitor (duplicate key)");
+        throw std::logic_error("invalid ID for state monitor (duplicate ID)");
     }
     statesMap[id] = new State;
     scheduleStateReader(id, stateMonitor);
@@ -20,6 +20,11 @@ void StateMonitorManager::startMonitor() {
 
 [[noreturn]] void StateMonitorManager::monitorStates() {
     while (true) {
+        if (scheduledStateReaderQueue.empty()) {
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            continue;
+        }
+
         ScheduledStateReader scheduledSR = scheduledStateReaderQueue.top();
         if (scheduledSR.isReady()) {
             scheduledStateReaderQueue.pop();

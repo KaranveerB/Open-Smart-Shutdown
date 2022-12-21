@@ -14,7 +14,7 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QWidget(parent
     auto *sm = new StateMonitor<std::chrono::time_point<std::chrono::system_clock>>
             (sr, eval);
 
-    addStateMonitor(sm, 0, "Test SM");
+//    addStateMonitor(sm, 0, "Test SM");
 
     stateMonitorManager.startMonitor();
 }
