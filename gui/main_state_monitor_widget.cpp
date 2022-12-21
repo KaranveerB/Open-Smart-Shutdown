@@ -3,7 +3,7 @@
 #include <utility>
 
 MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QWidget(parent) {
-    stateMonitorListLayout = new QHBoxLayout(this);
+    stateMonitorListLayout = new QVBoxLayout(this);
     this->setLayout(stateMonitorListLayout);
 
     stateMonitorManager.startMonitor();

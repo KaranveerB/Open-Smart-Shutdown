@@ -23,7 +23,7 @@ public slots:
 
 private:
 
-    QHBoxLayout *stateMonitorListLayout;
+    QVBoxLayout *stateMonitorListLayout;
 
     StateMonitorManager stateMonitorManager;
 };
