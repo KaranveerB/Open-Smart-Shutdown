@@ -15,7 +15,7 @@ Q_OBJECT
 public:
     explicit MainStateMonitorWidget(QWidget *parent = nullptr);
 
-    void addStateMonitor(IStateMonitor *sm, unsigned int id, QString name); // TODO: Add proper fields
+    void addStateMonitor(IStateMonitor *sm, QString name); // TODO: Add proper fields
 
 public slots:
     void createNewStateMonitor();

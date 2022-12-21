@@ -53,7 +53,7 @@ private:
     };
 
 public:
-    void addStateMonitor(IStateMonitor *stateMonitor, unsigned int id);
+    [[nodiscard]] unsigned int addStateMonitor(IStateMonitor *stateMonitor);
 
     void startMonitor();
 
@@ -72,6 +72,8 @@ private:
     std::thread stateMonitorThread;
 
     std::unordered_map<unsigned int, State *> statesMap;
+
+    unsigned int nextId = 0;
 signals:
 
     void stateChanged(unsigned int id, State *state) const;

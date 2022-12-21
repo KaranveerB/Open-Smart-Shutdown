@@ -1,12 +1,11 @@
 #include "state_monitor_manager.h"
 
-void StateMonitorManager::addStateMonitor(IStateMonitor *stateMonitor, unsigned int id) {
-    if (statesMap.find(id) != statesMap.end()) {
-        throw std::logic_error("invalid ID for state monitor (duplicate ID)");
-    }
+unsigned int StateMonitorManager::addStateMonitor(IStateMonitor *stateMonitor) {
+    unsigned int id = nextId++;
     statesMap[id] = new State;
     scheduleStateReader(id, stateMonitor);
     emit monitoredStatesChanged();
+    return id;
 }
 
 State *StateMonitorManager::getState(unsigned int id) const {

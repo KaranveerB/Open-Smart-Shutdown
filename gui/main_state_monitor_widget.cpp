@@ -9,8 +9,8 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QWidget(parent
     stateMonitorManager.startMonitor();
 }
 
-void MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, unsigned int id, QString name) {
-    stateMonitorManager.addStateMonitor(sm, id);
+void MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, QString name) {
+    unsigned int id = stateMonitorManager.addStateMonitor(sm);
     auto *newStateMonitorWidget = new StateMonitorWidget(id, std::move(name),
                                                          stateMonitorManager, this);
     stateMonitorListLayout->addWidget(newStateMonitorWidget);
@@ -20,8 +20,8 @@ void MainStateMonitorWidget::createNewStateMonitor() {
     StateMonitorCreatorWidget smCreatorWidget;
     smCreatorWidget.exec();
     if (smCreatorWidget.result() == QDialog::Accepted) {
-        IStateMonitor* stateMonitor = smCreatorWidget.getStateMonitor();
+        IStateMonitor *stateMonitor = smCreatorWidget.getStateMonitor();
         QString name = smCreatorWidget.getStateMonitorName();
-        MainStateMonitorWidget::addStateMonitor(stateMonitor, 0, name);
+        MainStateMonitorWidget::addStateMonitor(stateMonitor, name);
     }
 }
