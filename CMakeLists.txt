@@ -20,22 +20,24 @@ find_package(Qt6 COMPONENTS
 set(state_monitor_files
         core/state_monitor/state_monitor_manager.cpp
         core/state_monitor/state_monitor_manager.h
+        core/state_monitor/state_monitor.tpp
+        core/state_monitor/state_monitor.h
         core/state_monitor/state.cpp
         core/state_monitor/state.h)
 
 set(state_evaluator_files
         core/state_monitor/state_evaluator/state_evaluator.h
+        core/state_monitor/state_evaluator/state_evaluator_master.h
         core/state_monitor/state_evaluator/in_range_state_evaluator.tpp
         core/state_monitor/state_evaluator/in_range_state_evaluator.h
-        core/state_monitor/state_evaluator/state_evaluator_master.h
         core/state_monitor/state_evaluator/greater_than_state_evaluator.tpp
         core/state_monitor/state_evaluator/greater_than_state_evaluator.h)
 
 set(state_reader_files
         core/state_monitor/state_reader/state_reader.h
-        core/state_monitor/state_monitor.tpp
+        core/state_monitor/state_reader/state_reader_master.h
         core/state_monitor/state_reader/time_state_reader.cpp
-        core/state_monitor/state_reader/time_state_reader.h core/state_monitor/state_reader/state_reader_master.h)
+        core/state_monitor/state_reader/time_state_reader.h)
 
 set(triggered_executions_files
         core/state_monitor/events/event_triggers.cpp
@@ -48,7 +50,9 @@ set(gui_files
         gui/main_state_monitor_widget.cpp
         gui/main_state_monitor_widget.h
         gui/state_monitor_widget.cpp
-        gui/state_monitor_widget.h gui/state_monitor_creator_widget.cpp gui/state_monitor_creator_widget.h)
+        gui/state_monitor_widget.h
+        gui/state_monitor_creator_widget.cpp
+        gui/state_monitor_creator_widget.h)
 
 
 add_executable(open_smart_shutdown
