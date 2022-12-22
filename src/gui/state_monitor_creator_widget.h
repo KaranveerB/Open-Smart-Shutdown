@@ -9,9 +9,9 @@
 #include <QPushButton>
 #include <QLineEdit>
 
-#include "state_monitor.h"
-#include "state_evaluator/state_evaluator_master.h"
-#include "state_reader/state_reader_master.h"
+#include "state_monitor/state_monitor.h"
+#include "state_monitor/state_evaluator/state_evaluator_master.h"
+#include "state_monitor/state_reader/state_reader_master.h"
 
 
 class StateMonitorCreatorWidget : public QDialog {

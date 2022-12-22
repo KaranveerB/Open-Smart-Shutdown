@@ -7,7 +7,7 @@
 #include <QHBoxLayout>
 
 #include "state_monitor_widget.h"
-#include "state_monitor_manager.h"
+#include "state_monitor/state_monitor_manager.h"
 #include "state_monitor_creator_widget.h"
 
 class MainStateMonitorWidget : public QWidget {

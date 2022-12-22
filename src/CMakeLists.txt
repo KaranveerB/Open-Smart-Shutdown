@@ -7,13 +7,13 @@ set(QT6_INSTALL_PATH D:/pkg/Qt/6.3.1/mingw_64) # Ignore this if CMake can find Q
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON)
 
-include_directories(core/state_monitor gui)
+include_directories(core gui)
 
 set(CMAKE_PREFIX_PATH ${QT6_INSTALL_PATH})
 
 find_package(Qt6 COMPONENTS
-        Core
-        Gui
+        core
+        gui
         Widgets
         REQUIRED)
 
@@ -40,11 +40,11 @@ set(state_reader_files
         core/state_monitor/state_reader/time_state_reader.h)
 
 set(triggered_executions_files
-        core/state_monitor/events/event_triggers.cpp
-        core/state_monitor/events/event_triggers.h)
+        core/events/event_triggers.cpp
+        core/events/event_triggers.h)
 
 set(gui_files
-        gui/main.cpp
+        main.cpp
         gui/main_window.cpp
         gui/main_window.h
         gui/main_state_monitor_widget.cpp
@@ -87,7 +87,7 @@ if (WIN32)
                 "${QT6_INSTALL_PATH}/plugins/platforms/qwindows${DEBUG_SUFFIX}.dll"
                 "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugins/platforms/")
     endif ()
-    foreach (QT_LIB Core Gui Widgets)
+    foreach (QT_LIB core gui Widgets)
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy
                 "${QT6_INSTALL_PATH}/bin/Qt6${QT_LIB}${DEBUG_SUFFIX}.dll"

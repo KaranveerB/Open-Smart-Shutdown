@@ -4,8 +4,8 @@
 #include <QLabel>
 #include <QWidget>
 
-#include "state_monitor_manager.h"
-#include "state.h"
+#include "state_monitor/state_monitor_manager.h"
+#include "state_monitor/state.h"
 
 class StateMonitorWidget : public QWidget {
 public:
