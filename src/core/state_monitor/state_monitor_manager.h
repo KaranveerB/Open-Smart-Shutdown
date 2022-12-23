@@ -42,7 +42,7 @@ private:
 
         struct compare {
             bool operator()(const ScheduledStateReader &a, const ScheduledStateReader &b) const {
-                return a.scheduledTime < b.scheduledTime;
+                return a.scheduledTime > b.scheduledTime;
             }
         };
 
