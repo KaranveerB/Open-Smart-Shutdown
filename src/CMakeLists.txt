@@ -49,10 +49,12 @@ set(gui_files
         gui/main_window.h
         gui/main_state_monitor_widget.cpp
         gui/main_state_monitor_widget.h
-        gui/state_monitor_widget.cpp
-        gui/state_monitor_widget.h
+        gui/state_monitor_tracker.cpp
+        gui/state_monitor_tracker.h
         gui/state_monitor_creator_widget.cpp
-        gui/state_monitor_creator_widget.h)
+        gui/state_monitor_creator_widget.h
+        gui/state_monitor_widget_delegate.cpp
+        gui/state_monitor_widget_delegate.h)
 
 
 add_executable(open_smart_shutdown

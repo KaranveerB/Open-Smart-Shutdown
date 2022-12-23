@@ -2,7 +2,7 @@
 
 MainWindow::MainWindow() : QMainWindow() {
     setWindowTitle("Open Smart Shutdown");
-    resize(500, 500);
+    resize(600, 600);
 
     auto *mainWidget = new QWidget(this);
     auto *mainLayout = new QVBoxLayout(mainWidget);
