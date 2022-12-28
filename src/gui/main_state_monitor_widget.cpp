@@ -5,6 +5,20 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(pa
     headerLabels << tr("Type") << tr("Name") << tr("State") << tr("") << tr("");
 
     setHeaderLabels(headerLabels);
+
+    auto fm = fontMetrics();
+    QHeaderView *header = this->header();
+
+    header->setMinimumSectionSize(24);
+    header->resizeSection(0, fm.horizontalAdvance("Time  "));
+    header->setSectionResizeMode(1, QHeaderView::Stretch);
+    header->resizeSection(2, fm.horizontalAdvance("Inactive  "));
+    header->resizeSection(3, 24);
+    header->setSectionResizeMode(3, QHeaderView::Fixed);
+    header->resizeSection(4, 24);
+    header->setSectionResizeMode(4, QHeaderView::Fixed);
+    header->setStretchLastSection(false);
+
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setAlternatingRowColors(true);
     setRootIsDecorated(false);
@@ -25,7 +39,7 @@ void MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, QString name) {
 
     item->setText(0, "Time");
     item->setText(1, name);
-    item->setText(2, "waiting...");
+    item->setText(2, "Waiting");
 
     addTopLevelItem(item);
 

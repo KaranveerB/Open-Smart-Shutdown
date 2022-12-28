@@ -6,6 +6,7 @@ set(QT6_INSTALL_PATH D:/pkg/Qt/6.3.1/mingw_64) # Ignore this if CMake can find Q
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
 include_directories(core gui)
 
@@ -15,6 +16,7 @@ find_package(Qt6 COMPONENTS
         core
         gui
         Widgets
+        Svg
         REQUIRED)
 
 set(state_monitor_files
@@ -45,6 +47,7 @@ set(triggered_executions_files
 
 set(gui_files
         main.cpp
+        gui/icons.qrc
         gui/main_window.cpp
         gui/main_window.h
         gui/main_state_monitor_widget.cpp
@@ -56,18 +59,22 @@ set(gui_files
         gui/state_monitor_widget_delegate.cpp
         gui/state_monitor_widget_delegate.h)
 
+set(gui_resource_files
+        gui/icons.qrc)
 
 add_executable(open_smart_shutdown
         ${state_monitor_files}
         ${state_evaluator_files}
         ${state_reader_files}
         ${triggered_executions_files}
-        ${gui_files})
+        ${gui_files}
+        ${gui_resource_files})
 
 target_link_libraries(open_smart_shutdown
         Qt::Core
         Qt::Gui
-        Qt::Widgets)
+        Qt::Widgets
+        Qt::Svg)
 
 if (WIN32)
     set(DEBUG_SUFFIX)
