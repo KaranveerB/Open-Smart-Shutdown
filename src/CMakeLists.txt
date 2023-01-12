@@ -13,8 +13,8 @@ include_directories(core gui)
 set(CMAKE_PREFIX_PATH ${QT6_INSTALL_PATH})
 
 find_package(Qt6 COMPONENTS
-        core
-        gui
+        Core
+        Gui
         Widgets
         Svg
         REQUIRED)
