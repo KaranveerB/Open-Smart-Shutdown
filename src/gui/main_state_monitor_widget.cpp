@@ -10,7 +10,7 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(pa
     QHeaderView *header = this->header();
 
     header->setMinimumSectionSize(24);
-    header->resizeSection(0, fm.horizontalAdvance("Time  "));
+    header->resizeSection(0, fm.horizontalAdvance("Shell  "));
     header->setSectionResizeMode(1, QHeaderView::Stretch);
     header->resizeSection(2, fm.horizontalAdvance("Inactive  "));
     header->resizeSection(3, 24);
@@ -29,16 +29,15 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(pa
     stateMonitorManager.startMonitor();
 }
 
-void MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, QString name) {
+void MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, StateMonitorCreatorWidget::StateMonitorMetaInfo metaInfo) {
     unsigned int id = stateMonitorManager.addStateMonitor(sm);
-    auto *newStateMonitorTracker = new StateMonitorTracker(id, name,
-                                                           stateMonitorManager, this);
+    auto *newStateMonitorTracker = new StateMonitorTracker(id, stateMonitorManager, this);
     stateMonitorTrackers.append(newStateMonitorTracker);
 
     auto *item = new QTreeWidgetItem; // TODO: Customize this
 
-    item->setText(0, "Time");
-    item->setText(1, name);
+    item->setText(0, metaInfo.typeName);
+    item->setText(1, metaInfo.name);
     item->setText(2, "Waiting");
 
     addTopLevelItem(item);
@@ -55,8 +54,8 @@ void MainStateMonitorWidget::createNewStateMonitor() {
     smCreatorWidget.exec();
     if (smCreatorWidget.result() == QDialog::Accepted) {
         IStateMonitor *stateMonitor = smCreatorWidget.getStateMonitor();
-        QString name = smCreatorWidget.getStateMonitorName();
-        MainStateMonitorWidget::addStateMonitor(stateMonitor, name);
+        auto metaInfo = smCreatorWidget.getStateMonitorMetaInfo();
+        MainStateMonitorWidget::addStateMonitor(stateMonitor, metaInfo);
     }
 }
 

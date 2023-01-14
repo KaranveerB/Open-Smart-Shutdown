@@ -16,7 +16,7 @@ class MainStateMonitorWidget : public QTreeWidget {
 public:
     explicit MainStateMonitorWidget(QWidget *parent = nullptr);
 
-    void addStateMonitor(IStateMonitor *sm, QString name); // TODO: Add proper fields
+    void addStateMonitor(IStateMonitor *sm, StateMonitorCreatorWidget::StateMonitorMetaInfo metaInfo); // TODO: Add proper fields
 
 public slots:
     void createNewStateMonitor();

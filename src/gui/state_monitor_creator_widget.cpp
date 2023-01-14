@@ -184,8 +184,31 @@ QTime StateMonitorCreatorWidget::truncateQTimeToMinutes(QTime time) {
 	return time;
 }
 
-QString StateMonitorCreatorWidget::getStateMonitorName() const {
-    return nameLineEdit->text();
+StateMonitorCreatorWidget::StateMonitorMetaInfo StateMonitorCreatorWidget::getStateMonitorMetaInfo() const {
+    StateMonitorMetaInfo metaInfo;
+    metaInfo.name = nameLineEdit->text();
+    // TODO: Use map (or better solution) and move this somewhere else
+    switch (currentStateReaderType) {
+        case Time:
+            metaInfo.typeName = "Time";
+            break;
+        case Cpu:
+            metaInfo.typeName = "CPU";
+            break;
+        case Gpu:
+            metaInfo.typeName = "GPU";
+            break;
+        case Disk:
+            metaInfo.typeName = "Disk";
+            break;
+        case Network:
+            metaInfo.typeName = "Net";
+            break;
+        case Shell:
+            metaInfo.typeName = "Shell";
+            break;
+    }
+    return metaInfo;
 }
 
 void StateMonitorCreatorWidget::updateReaderDataInputWidget(StateReaderType stateReaderType) {

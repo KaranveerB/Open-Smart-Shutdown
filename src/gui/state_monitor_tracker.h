@@ -11,7 +11,7 @@
 class StateMonitorTracker : public QObject {
 Q_OBJECT
 public:
-    StateMonitorTracker(unsigned int id, QString name, const StateMonitorManager &stateMonitorItem,
+    StateMonitorTracker(unsigned int id, const StateMonitorManager &stateMonitorItem,
                         QObject *parent = nullptr);
 
     void updateState(State &state);

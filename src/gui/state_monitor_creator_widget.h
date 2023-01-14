@@ -17,11 +17,16 @@
 class StateMonitorCreatorWidget : public QDialog {
 Q_OBJECT
 public:
+    struct StateMonitorMetaInfo {
+        QString name;
+        QString typeName;
+    };
+
     explicit StateMonitorCreatorWidget(QWidget *parent = nullptr);
 
     IStateMonitor *getStateMonitor() const;
 
-    QString getStateMonitorName() const;
+    StateMonitorMetaInfo getStateMonitorMetaInfo() const;
 
 private slots:
 
@@ -41,6 +46,7 @@ private:
 
     StateReaderType currentStateReaderType;
     StateEvaluatorType currentStateEvaluatorType;
+
     QWidget *mainWidget;
     QVBoxLayout *mainWidgetLayout;
     QLineEdit *nameLineEdit;

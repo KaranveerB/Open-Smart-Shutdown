@@ -1,7 +1,7 @@
 #include "state_monitor_tracker.h"
 
-StateMonitorTracker::StateMonitorTracker(unsigned int id, QString name, const StateMonitorManager &stateMonitorItem,
-                                         QObject *parent) : QObject(parent), id{id}, nameQString{name} {
+StateMonitorTracker::StateMonitorTracker(unsigned int id, const StateMonitorManager &stateMonitorItem,
+                                         QObject *parent) : QObject(parent), id{id} {
 
     // Clion error for connect: "constexpr variable 'begin' must be initialized by a
     // constant expression" can be safely ignored here (likely bug in clion).
