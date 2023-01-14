@@ -2,7 +2,7 @@
 
 MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(parent) {
     QStringList headerLabels;
-    headerLabels << tr("Type") << tr("Name") << tr("State") << tr("") << tr("");
+    headerLabels << tr("Type") << tr("Name") << tr("Value") << tr("State") << tr("") << tr("");
 
     setHeaderLabels(headerLabels);
 
@@ -12,11 +12,13 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(pa
     header->setMinimumSectionSize(24);
     header->resizeSection(0, fm.horizontalAdvance("Shell  "));
     header->setSectionResizeMode(1, QHeaderView::Stretch);
-    header->resizeSection(2, fm.horizontalAdvance("Inactive  "));
-    header->resizeSection(3, 24);
-    header->setSectionResizeMode(3, QHeaderView::Fixed);
+    header->setSectionResizeMode(2, QHeaderView::Stretch);
+    header->resizeSection(2, fm.horizontalAdvance("99:99:99  "));
+    header->resizeSection(3, fm.horizontalAdvance("Inactive  "));
     header->resizeSection(4, 24);
     header->setSectionResizeMode(4, QHeaderView::Fixed);
+    header->resizeSection(5, 24);
+    header->setSectionResizeMode(5, QHeaderView::Fixed);
     header->setStretchLastSection(false);
 
     setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -38,7 +40,7 @@ void MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, StateMonitorCrea
 
     item->setText(0, metaInfo.typeName);
     item->setText(1, metaInfo.name);
-    item->setText(2, "Waiting");
+    item->setText(3, "Waiting");
 
     addTopLevelItem(item);
 
@@ -46,6 +48,8 @@ void MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, StateMonitorCrea
             &MainStateMonitorWidget::updateStateMonitorTrackerState);
     connect(newStateMonitorTracker, &StateMonitorTracker::stateMonitorTrackerNameChanged, this,
             &MainStateMonitorWidget::updateStateMonitorTrackerName);
+    connect(newStateMonitorTracker, &StateMonitorTracker::stateMonitorTrackerStateValueChanged, this,
+            &MainStateMonitorWidget::updateStateMonitorTrackerStateValue);
 
 }
 
@@ -86,7 +90,17 @@ void MainStateMonitorWidget::updateStateMonitorTrackerState(QString state) {
     QTreeWidgetItem *item = topLevelItem(row);
 
     if (item) {
-        item->setText(2, state);
+        item->setText(3, state);
     }
 
+}
+
+void MainStateMonitorWidget::updateStateMonitorTrackerStateValue(QString stateValue) {
+    int row = getRow((StateMonitorTracker *) sender());
+
+    QTreeWidgetItem *item = topLevelItem(row);
+
+    if (item) {
+        item->setText(2, stateValue);
+    }
 }

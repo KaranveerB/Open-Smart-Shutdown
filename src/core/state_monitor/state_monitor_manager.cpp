@@ -30,6 +30,7 @@ void StateMonitorManager::startMonitor() {
             auto *sm = scheduledSR.getStateReader();
             unsigned int id = scheduledSR.getId();
             statesMap[id]->setState(sm->getStateActive());
+            statesMap[id]->setStateValueString(sm->getStateValueString());
             emit stateChanged(id, statesMap.at(id));
             scheduleStateReader(id, sm); // reschedule state reader
         } else {

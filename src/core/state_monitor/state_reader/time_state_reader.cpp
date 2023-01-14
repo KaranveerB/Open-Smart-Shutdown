@@ -4,3 +4,7 @@ QTime TimeStateReader::getStateValue() const {
     return QTime::currentTime();
 }
 
+std::string TimeStateReader::stateValueToString(QTime value) const {
+    return value.toString("hh:mm:ss").toStdString();
+}
+

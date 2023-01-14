@@ -15,10 +15,17 @@ void StateMonitorTracker::updateState(State &state) {
 
     // TODO: Switch to have colors as well (keep text too for our friends with protanopia out there)
     QString newStateQString = stateBool ? "Active" : "Inactive";
+    QString newStateValueQString = QString::fromStdString(state.getStateValueString());
+
 
     if (newStateQString != stateQString) {
         stateQString = newStateQString;
         emit stateMonitorTrackerStateChanged(stateQString);
+    }
+
+    if (newStateValueQString != stateValueQString) {
+        stateValueQString= newStateValueQString;
+        emit stateMonitorTrackerStateValueChanged(stateValueQString);
     }
 
 }

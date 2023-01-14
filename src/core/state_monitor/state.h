@@ -15,8 +15,17 @@ public:
         state = newState;
     }
 
+    std::string getStateValueString() const {
+        return stateValueString;
+    }
+
+    void setStateValueString(std::string newStateValueString) {
+        stateValueString = std::move(newStateValueString);
+    }
+
 private:
     bool state = false; // TODO: Make state thread safe
+    std::string stateValueString;
 
     friend class StateMonitorManager;
 };

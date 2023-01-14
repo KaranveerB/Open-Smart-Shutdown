@@ -7,7 +7,10 @@
 
 class IStateMonitor {
 public:
-    virtual bool getStateActive() const = 0;
+    virtual bool getStateActive() = 0;
+
+    // returns string representation of state value used when getStateActive() was last called
+    virtual std::string getStateValueString() const = 0;
 
     virtual std::chrono::duration<int64_t> getPollingInterval() const = 0;
 };
@@ -31,13 +34,16 @@ public:
         }
     };
 
-    bool getStateActive() const override;
+    bool getStateActive() override;
+
+    std::string getStateValueString() const override;
 
     std::chrono::duration<int64_t> getPollingInterval() const override;
 
 private:
     StateReader<T> *stateReader;
     StateEvaluator<T> *stateEvaluator;
+    T prevStateValue;
     std::chrono::duration<int64_t> pollingInterval = std::chrono::seconds(1);
 };
 

@@ -23,6 +23,7 @@ public slots:
 
     void updateStateMonitorTrackerName(QString name);
     void updateStateMonitorTrackerState(QString state);
+    void updateStateMonitorTrackerStateValue(QString stateValue);
 
 private:
     int getRow(StateMonitorTracker *caller);

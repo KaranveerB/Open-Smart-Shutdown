@@ -22,6 +22,7 @@ private:
     unsigned int id;
     QString nameQString;
     QString stateQString;
+    QString stateValueQString;
 
 private slots:
 
@@ -32,5 +33,7 @@ signals:
     void stateMonitorTrackerNameChanged(QString name);
 
     void stateMonitorTrackerStateChanged(QString state);
+
+    void stateMonitorTrackerStateValueChanged(QString stateValue);
 
 };

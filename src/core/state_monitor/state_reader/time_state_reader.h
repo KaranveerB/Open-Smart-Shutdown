@@ -9,4 +9,6 @@
 class TimeStateReader : public StateReader<QTime> {
 public:
     QTime getStateValue() const override;
+
+    std::string stateValueToString(QTime value) const override;
 };
