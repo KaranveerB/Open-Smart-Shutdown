@@ -36,7 +36,7 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
     mainWidgetLayout->addWidget(nameLineEdit);
 
     auto *readerTypeSelector = new QComboBox(mainWidget);
-    readerTypeSelector->addItem("Date/Time", QVariant(StateReaderType::Time));
+    readerTypeSelector->addItem("Time", QVariant(StateReaderType::Time));
     readerTypeSelector->addItem("Network usage", QVariant(StateReaderType::Network));
     readerTypeSelector->addItem("Disk usage", QVariant(StateReaderType::Disk));
     readerTypeSelector->addItem("CPU usage", QVariant(StateReaderType::Cpu));
@@ -77,11 +77,11 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
     evaluatorDataInputWidget->setLayout(evaluatorDataInputLayout);
     mainWidgetLayout->addWidget(evaluatorDataInputWidget);
 
-    evaluatorDataInput1 = new QDateTimeEdit(evaluatorDataInputWidget);
-    evaluatorDataInput2 = new QDateTimeEdit(evaluatorDataInputWidget);
+    evaluatorDataInput1 = new QTimeEdit(evaluatorDataInputWidget);
+    evaluatorDataInput2 = new QTimeEdit(evaluatorDataInputWidget);
 
-    ((QDateTimeEdit *) evaluatorDataInput1)->setMinimumDateTime(QDateTime::currentDateTime());
-    ((QDateTimeEdit *) evaluatorDataInput2)->setMinimumDateTime(QDateTime::currentDateTime());
+    ((QTimeEdit *) evaluatorDataInput1)->setTime(QTime::currentTime());
+    ((QTimeEdit *) evaluatorDataInput2)->setTime(QTime::currentTime());
 
     evaluatorDataInputLayout->addWidget(evaluatorDataInput1);
     evaluatorDataInputLayout->addWidget(evaluatorDataInput2);
@@ -109,7 +109,7 @@ IStateMonitor *StateMonitorCreatorWidget::getStateMonitor() const {
     switch (currentStateReaderType) {
         case Time: {
             // FIXME: time state monitor is off by ~30 seconds
-            typedef time_point<system_clock> T;
+            typedef QTime T;
             auto *stateReader = createStateReader<T>();
             auto *stateEvaluator = createStateEvaluator<T>();
             return new StateMonitor<T>(stateReader, stateEvaluator);
@@ -153,12 +153,12 @@ StateEvaluator<T> *StateMonitorCreatorWidget::createStateEvaluator() const {
     T data2;
 
     if (currentStateReaderType == StateReaderType::Time) {
-        auto *data1Input = (QDateTimeEdit *) evaluatorDataInput1;
-        auto *data2Input = (QDateTimeEdit *) evaluatorDataInput2;
-        data1 = convertQDateTimeToTimePoint(data1Input->dateTime());
+        auto *data1Input = (QTimeEdit *) evaluatorDataInput1;
+        auto *data2Input = (QTimeEdit *) evaluatorDataInput2;
+        data1 = data1Input->time();
 
         if (currentStateEvaluatorType == StateEvaluatorType::InRange) {
-            data2 = convertQDateTimeToTimePoint(data2Input->dateTime());
+	        data2 = data2Input->time();
         }
     }
 
@@ -177,10 +177,6 @@ StateEvaluator<T> *StateMonitorCreatorWidget::createStateEvaluator() const {
             break;
     }
     throw std::logic_error("can't create state evaluator of invalid type");
-}
-
-time_point<system_clock> StateMonitorCreatorWidget::convertQDateTimeToTimePoint(QDateTime qdt) {
-    return time_point<system_clock>(std::chrono::milliseconds(qdt.toMSecsSinceEpoch()));
 }
 
 QString StateMonitorCreatorWidget::getStateMonitorName() const {

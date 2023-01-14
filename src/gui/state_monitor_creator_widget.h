@@ -36,8 +36,6 @@ private:
     template<class T>
     StateEvaluator<T> *createStateEvaluator() const;
 
-    static std::chrono::time_point<std::chrono::system_clock> convertQDateTimeToTimePoint(QDateTime qdt);
-
     StateReaderType currentStateReaderType;
     StateEvaluatorType currentStateEvaluatorType;
     QWidget *mainWidget;
