@@ -80,8 +80,8 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
     evaluatorDataInput1 = new QTimeEdit(evaluatorDataInputWidget);
     evaluatorDataInput2 = new QTimeEdit(evaluatorDataInputWidget);
 
-    ((QTimeEdit *) evaluatorDataInput1)->setTime(QTime::currentTime());
-    ((QTimeEdit *) evaluatorDataInput2)->setTime(QTime::currentTime());
+    ((QTimeEdit *) evaluatorDataInput1)->setTime(truncateQTimeToMinutes(QTime::currentTime()));
+    ((QTimeEdit *) evaluatorDataInput2)->setTime(truncateQTimeToMinutes(QTime::currentTime()));
 
     evaluatorDataInputLayout->addWidget(evaluatorDataInput1);
     evaluatorDataInputLayout->addWidget(evaluatorDataInput2);
@@ -108,7 +108,6 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
 IStateMonitor *StateMonitorCreatorWidget::getStateMonitor() const {
     switch (currentStateReaderType) {
         case Time: {
-            // FIXME: time state monitor is off by ~30 seconds
             typedef QTime T;
             auto *stateReader = createStateReader<T>();
             auto *stateEvaluator = createStateEvaluator<T>();
@@ -177,6 +176,12 @@ StateEvaluator<T> *StateMonitorCreatorWidget::createStateEvaluator() const {
             break;
     }
     throw std::logic_error("can't create state evaluator of invalid type");
+}
+
+QTime StateMonitorCreatorWidget::truncateQTimeToMinutes(QTime time) {
+	time = time.addSecs(-time.second());
+	time = time.addMSecs(-time.msec());
+	return time;
 }
 
 QString StateMonitorCreatorWidget::getStateMonitorName() const {

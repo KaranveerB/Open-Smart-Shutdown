@@ -4,7 +4,7 @@
 
 #include <QComboBox>
 #include <QDialog>
-#include <QDateTimeEdit>
+#include <QTimeEdit>
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QLineEdit>
@@ -30,11 +30,14 @@ private slots:
     void updateEvaluatorDataInputWidget(StateEvaluatorType stateEvaluatorType);
 
 private:
+
     template<class T>
     StateReader<T> *createStateReader() const;
 
     template<class T>
     StateEvaluator<T> *createStateEvaluator() const;
+
+	static QTime truncateQTimeToMinutes(QTime time);
 
     StateReaderType currentStateReaderType;
     StateEvaluatorType currentStateEvaluatorType;
