@@ -8,6 +8,9 @@
  */
 
 #include "state_reader.h"
+#include "cpu_state_reader.h"
+#include "disk_state_reader.h"
+#include "net_state_reader.h"
 #include "time_state_reader.h"
 
 typedef enum {

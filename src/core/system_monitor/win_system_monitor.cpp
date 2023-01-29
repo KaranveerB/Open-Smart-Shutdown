@@ -4,7 +4,7 @@ using namespace Wmi;
 
 float WinSystemMonitor::getCpuUsage() {
     auto processor = retrieveWmi<Win32_Processor>();
-    return static_cast<float>(processor.LoadPercentage) / 100;
+    return (float) (processor.LoadPercentage);
 }
 
 float WinSystemMonitor::getDiskUsage(std::string diskName) {
@@ -17,12 +17,12 @@ float WinSystemMonitor::getDiskUsage(std::string diskName) {
 
         if (driveId == diskName) {
             auto bytes = (float) disk.DiskWriteBytesPerSec;
-            auto megabytes = bytes/1e6f;
-            megabytes = round(megabytes * 100.0f) / 100.0f; // round to 2 decimal places
+            auto megabytes = bytes / 1e6f;
+            megabytes = round(megabytes * 1000.0f) / 1000.0f; // round to 3 decimal places
             return megabytes;
         }
     }
-    throw std::logic_error("invalid drive");
+    throw std::runtime_error("invalid drive");
 }
 
 float WinSystemMonitor::getNetUpAmount() {
@@ -34,13 +34,10 @@ float WinSystemMonitor::getNetDownAmount() {
 }
 
 float WinSystemMonitor::getNetCombinedAmount() {
-    auto netIfaces = retrieveAllWmi<Win32_PerfFormattedData_Tcpip_NetworkInterface>();
-    for (const auto &netIface : netIfaces) {
-        if (netIface.Name == "_Total") {
-            auto bytes = (float) netIface.BytesTotalPerSec;
-            auto kilobytes = bytes/1e3f;
-            kilobytes = round(kilobytes * 10.0f) / 10.0f; // round to 2 decimal places
-            return kilobytes;
-        }
-    }
+    // TODO: Allow choosing of network adapter. Currently selects the first one (as most have one physical net adpater)
+    auto netIface = retrieveWmi<Win32_PerfFormattedData_Tcpip_NetworkInterface>();
+    auto bytes = (float) netIface.BytesTotalPerSec;
+    auto kilobytes = bytes / 1e3f;
+    kilobytes = round(kilobytes * 10.0f) / 10.0f; // round to 2 decimal places
+    return kilobytes;
 }

@@ -40,7 +40,7 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
     readerTypeSelector->addItem("Network usage", QVariant(StateReaderType::Network));
     readerTypeSelector->addItem("Disk usage", QVariant(StateReaderType::Disk));
     readerTypeSelector->addItem("CPU usage", QVariant(StateReaderType::Cpu));
-    readerTypeSelector->addItem("Shell command", QVariant(StateReaderType::Shell));
+//    readerTypeSelector->addItem("Shell command", QVariant(StateReaderType::Shell)); // TODO: Implement
     mainWidgetLayout->addWidget(readerTypeSelector);
 
     QObject::connect(readerTypeSelector, &QComboBox::currentIndexChanged,
@@ -52,8 +52,6 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
 
     readerDataInput = new QLineEdit("State reader data input", mainWidget);
     mainWidgetLayout->addWidget(readerDataInput);
-
-    updateReaderDataInputWidget(readerTypeSelector->currentData().value<StateReaderType>());
 
     auto *evaluatorTypeSelector = new QComboBox(mainWidget);
     evaluatorTypeSelector->addItem("Between", QVariant(StateEvaluatorType::InRange));
@@ -85,7 +83,8 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
     evaluatorDataInputLayout->addWidget(evaluatorDataInput1);
     evaluatorDataInputLayout->addWidget(evaluatorDataInput2);
 
-    updateEvaluatorDataInputWidget(evaluatorTypeSelector->currentData().value<StateEvaluatorType>());
+    currentStateEvaluatorType = evaluatorTypeSelector->currentData().value<StateEvaluatorType>();
+    updateReaderDataInputWidget(readerTypeSelector->currentData().value<StateReaderType>());
 
     auto *completeButtonsWidget = new QWidget(mainWidget);
     auto *completeButtonLayout = new QHBoxLayout(completeButtonsWidget);
@@ -104,58 +103,47 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
     setMinimumSize(350, 300);
 }
 
-IStateMonitor *StateMonitorCreatorWidget::getStateMonitor() const {
-    switch (currentStateReaderType) {
-        case Time: {
-            typedef QTime T;
-            auto *stateReader = createStateReader<T>();
-            auto *stateEvaluator = createStateEvaluator<T>();
-            return new StateMonitor<T>(stateReader, stateEvaluator);
-        }
-        case Cpu:
-            break;
-        case Disk:
-            break;
-        case Network:
-            break;
-        case Shell:
-            break;
-    }
-}
-
-template<class T>
-StateReader<T> *StateMonitorCreatorWidget::createStateReader() const {
-    switch (currentStateReaderType) {
-        case Time:
-            return new TimeStateReader();
-        case Cpu:
-            break;
-        case Disk:
-            break;
-        case Network:
-            break;
-        case Shell:
-            break;
-    }
-    throw std::logic_error("can't create state reader of invalid type");
-}
-
-
 template<class T>
 StateEvaluator<T> *StateMonitorCreatorWidget::createStateEvaluator() const {
-    T data1;
-    T data2;
+    throw std::runtime_error("unknown type for creating evaluator");
+}
 
-    if (currentStateReaderType == StateReaderType::Time) {
-        auto *data1Input = (QTimeEdit *) evaluatorDataInput1;
-        auto *data2Input = (QTimeEdit *) evaluatorDataInput2;
-        data1 = data1Input->time();
+template<>
+StateEvaluator<float> *StateMonitorCreatorWidget::createStateEvaluator<float>() const {
+    float data1;
+    float data2;
 
-        if (currentStateEvaluatorType == StateEvaluatorType::InRange) {
-	        data2 = data2Input->time();
-        }
+    auto *data1Input = (QDoubleSpinBox *) evaluatorDataInput1;
+    auto *data2Input = (QDoubleSpinBox *) evaluatorDataInput2;
+    data1 = (float) data1Input->value();
+
+    if (currentStateEvaluatorType == StateEvaluatorType::InRange) {
+        data2 = (float) data2Input->value();
     }
 
+    return createStateEvaluator<float>(data1, data2);
+
+}
+
+template<>
+StateEvaluator<QTime> *StateMonitorCreatorWidget::createStateEvaluator<QTime>() const {
+    QTime data1;
+    QTime data2;
+
+    auto *data1Input = (QTimeEdit *) evaluatorDataInput1;
+    auto *data2Input = (QTimeEdit *) evaluatorDataInput2;
+    data1 = data1Input->time();
+
+    if (currentStateEvaluatorType == StateEvaluatorType::InRange) {
+        data2 = data2Input->time();
+    }
+
+    return createStateEvaluator<QTime>(data1, data2);
+
+}
+
+template<class T>
+StateEvaluator<T> *StateMonitorCreatorWidget::createStateEvaluator(T data1, T data2) const {
     switch (currentStateEvaluatorType) {
         case InRange:
             return new InRangeStateEvaluator<T>(data1, data2);
@@ -170,13 +158,45 @@ StateEvaluator<T> *StateMonitorCreatorWidget::createStateEvaluator() const {
         case Boolean:
             break;
     }
-    throw std::logic_error("can't create state evaluator of invalid type");
 }
 
+
+IStateMonitor *StateMonitorCreatorWidget::getStateMonitor() const {
+    switch (currentStateReaderType) {
+        case Time: {
+            typedef QTime T;
+            auto *stateReader = new TimeStateReader();
+            auto *stateEvaluator = createStateEvaluator<T>();
+            return new StateMonitor<T>(stateReader, stateEvaluator);
+        }
+        case Cpu: {
+            typedef float T;
+            auto *stateReader = new CpuStateReader();
+            auto *stateEvaluator = createStateEvaluator<T>();
+            return new StateMonitor<T>(stateReader, stateEvaluator);
+        }
+        case Disk: {
+            typedef float T;
+            auto *stateReader = new DiskStateReader("_Total"); // TODO: Allow selecting disk
+            auto *stateEvaluator = createStateEvaluator<T>();
+            return new StateMonitor<T>(stateReader, stateEvaluator);
+        }
+        case Network: {
+            typedef float T;
+            auto *stateReader = new NetStateReader();
+            auto *stateEvaluator = createStateEvaluator<T>();
+            return new StateMonitor<T>(stateReader, stateEvaluator);
+        }
+        case Shell:
+            break;
+    }
+}
+
+
 QTime StateMonitorCreatorWidget::truncateQTimeToMinutes(QTime time) {
-	time = time.addSecs(-time.second());
-	time = time.addMSecs(-time.msec());
-	return time;
+    time = time.addSecs(-time.second());
+    time = time.addMSecs(-time.msec());
+    return time;
 }
 
 StateMonitorCreatorWidget::StateMonitorMetaInfo StateMonitorCreatorWidget::getStateMonitorMetaInfo() const {
@@ -208,13 +228,49 @@ void StateMonitorCreatorWidget::updateReaderDataInputWidget(StateReaderType stat
 
     currentStateReaderType = stateReaderType;
 
-    // TODO: Also show current reading of state monitor
+    delete evaluatorDataInput1;
+    delete evaluatorDataInput2;
 
+    switch (stateReaderType) {
+        case Time: {
+            evaluatorDataInput1 = new QTimeEdit(evaluatorDataInputWidget);
+            evaluatorDataInput2 = new QTimeEdit(evaluatorDataInputWidget);
+
+            ((QTimeEdit *) evaluatorDataInput1)->setTime(truncateQTimeToMinutes(QTime::currentTime()));
+            ((QTimeEdit *) evaluatorDataInput2)->setTime(truncateQTimeToMinutes(QTime::currentTime()));
+        }
+            break;
+        case Cpu:
+        case Disk:
+        case Network: {
+            evaluatorDataInput1 = new QDoubleSpinBox(evaluatorDataInputWidget);
+            evaluatorDataInput2 = new QDoubleSpinBox(evaluatorDataInputWidget);
+        }
+            break;
+        case Shell:
+            // TODO: Handle
+            break;
+
+    }
+
+    evaluatorDataInputLayout->addWidget(evaluatorDataInput1);
+    evaluatorDataInputLayout->addWidget(evaluatorDataInput2);
+
+    updateEvaluatorDataInputWidget(currentStateEvaluatorType);
+
+    // TODO: Also show current reading of state monitor
 }
 
 void StateMonitorCreatorWidget::updateEvaluatorDataInputWidget(StateEvaluatorType stateEvaluatorType) {
     currentStateEvaluatorType = stateEvaluatorType;
-    // TODO
+    switch (stateEvaluatorType) {
+        case InRange:
+            evaluatorDataInput1->setEnabled(true);
+            evaluatorDataInput2->setEnabled(true);
+            break;
+        default:
+            evaluatorDataInput1->setEnabled(true);
+            evaluatorDataInput2->setEnabled(false);
+
+    }
 }
-
-

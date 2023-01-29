@@ -4,6 +4,7 @@
 
 #include <QComboBox>
 #include <QDialog>
+#include <QDoubleSpinBox>
 #include <QTimeEdit>
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -37,12 +38,18 @@ private slots:
 private:
 
     template<class T>
-    StateReader<T> *createStateReader() const;
-
-    template<class T>
     StateEvaluator<T> *createStateEvaluator() const;
 
-	static QTime truncateQTimeToMinutes(QTime time);
+    template<>
+    StateEvaluator<float> *createStateEvaluator() const;
+
+    template<>
+    StateEvaluator<QTime> *createStateEvaluator() const;
+
+    template<class T>
+    StateEvaluator<T> *createStateEvaluator(T min, T max) const;
+
+    static QTime truncateQTimeToMinutes(QTime time);
 
     StateReaderType currentStateReaderType;
     StateEvaluatorType currentStateEvaluatorType;

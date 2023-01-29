@@ -26,7 +26,7 @@ public:
         } catch (std::exception &e) {
             throw std::exception("invalid driveName");
         }
-        driveName = driveName;
+        this->driveName = driveName;
     }
 
     float getStateValue() const override {
@@ -35,7 +35,7 @@ public:
 
     std::string stateValueToString(float value) const override {
         std::ostringstream output;
-        output << std::fixed << std::setprecision(2) << value << "MB/s";
+        output << std::fixed << std::setprecision(3) << value << "MB/s";
         return output.str();
     }
 
