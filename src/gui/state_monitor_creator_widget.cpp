@@ -114,8 +114,6 @@ IStateMonitor *StateMonitorCreatorWidget::getStateMonitor() const {
         }
         case Cpu:
             break;
-        case Gpu:
-            break;
         case Disk:
             break;
         case Network:
