@@ -40,7 +40,6 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
     readerTypeSelector->addItem("Network usage", QVariant(StateReaderType::Network));
     readerTypeSelector->addItem("Disk usage", QVariant(StateReaderType::Disk));
     readerTypeSelector->addItem("CPU usage", QVariant(StateReaderType::Cpu));
-    readerTypeSelector->addItem("GPU usage", QVariant(StateReaderType::Gpu));
     readerTypeSelector->addItem("Shell command", QVariant(StateReaderType::Shell));
     mainWidgetLayout->addWidget(readerTypeSelector);
 
@@ -133,8 +132,6 @@ StateReader<T> *StateMonitorCreatorWidget::createStateReader() const {
             return new TimeStateReader();
         case Cpu:
             break;
-        case Gpu:
-            break;
         case Disk:
             break;
         case Network:
@@ -194,9 +191,6 @@ StateMonitorCreatorWidget::StateMonitorMetaInfo StateMonitorCreatorWidget::getSt
             break;
         case Cpu:
             metaInfo.typeName = "CPU";
-            break;
-        case Gpu:
-            metaInfo.typeName = "GPU";
             break;
         case Disk:
             metaInfo.typeName = "Disk";

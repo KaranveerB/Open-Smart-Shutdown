@@ -13,7 +13,6 @@
 typedef enum {
     Time,
     Cpu,
-    Gpu,
     Disk,
     Network,
     Shell
