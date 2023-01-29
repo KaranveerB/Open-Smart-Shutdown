@@ -10,7 +10,7 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_PREFIX_PATH ${QT6_INSTALL_PATH})
 
-include_directories(core gui wmi/include)
+include_directories(core gui wmi/include wmi-extended)
 
 find_package(Qt6 COMPONENTS
         Core
@@ -40,8 +40,15 @@ set(state_evaluator_files
 set(state_reader_files
         core/state_monitor/state_reader/state_reader.h
         core/state_monitor/state_reader/state_reader_master.h
-        core/state_monitor/state_reader/time_state_reader.cpp
-        core/state_monitor/state_reader/time_state_reader.h)
+        core/state_monitor/state_reader/time_state_reader.h
+        core/state_monitor/state_reader/cpu_state_reader.h
+        core/state_monitor/state_reader/disk_state_reader.h
+        core/state_monitor/state_reader/net_state_reader.h)
+
+set(system_monitor_files
+        core/system_monitor/system_monitor.h
+        core/system_monitor/win_system_monitor.h
+        core/system_monitor/win_system_monitor.cpp)
 
 set(triggered_executions_files
         core/events/event_triggers.cpp
@@ -69,12 +76,14 @@ set(wmi_files
         wmi/include/wmi.hpp
         wmi/include/wmiclasses.hpp
         wmi/include/wmiexception.hpp
-        wmi/include/wmiresult.hpp)
+        wmi/include/wmiresult.hpp
+        wmi-extended/wmiclassesextended.hpp)
 
 add_executable(open_smart_shutdown
         ${state_monitor_files}
         ${state_evaluator_files}
         ${state_reader_files}
+        ${system_monitor_files}
         ${triggered_executions_files}
         ${gui_files}
         ${gui_resource_files}

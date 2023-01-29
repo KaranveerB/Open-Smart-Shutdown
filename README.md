@@ -2,7 +2,7 @@
 A QT based cross-platform open source tool to automate conditional shutdowns, similar to [AMP WinOFF](http://www.ampsoft.net/utilities/WinOFF.php).
 
 This can help in various cases such as 
-* Shutdown after downloading a game (based on low network and disk usage)
+* Shutdown after downloading a game (based on low network and driveName usage)
 * Shutdown after a render is finished (based on low CPU/GPU usage)
 * Shutdown after an upload finishes (based on low network usage)
 
