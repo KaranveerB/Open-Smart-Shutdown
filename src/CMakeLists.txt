@@ -1,16 +1,16 @@
 cmake_minimum_required(VERSION 3.23)
 project(open_smart_shutdown)
 
-set(QT6_INSTALL_PATH D:/pkg/Qt/6.3.1/mingw_64) # Ignore this if CMake can find Qt6 normally
+set(QT6_INSTALL_PATH D:/pkg/Qt/6.3.1/msvc2019_64) # Ignore this if CMake can find Qt6 normally
 # note that this is my personal path to Qt6 and it is likely different on your system
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-include_directories(core gui)
-
 set(CMAKE_PREFIX_PATH ${QT6_INSTALL_PATH})
+
+include_directories(core gui wmi/include)
 
 find_package(Qt6 COMPONENTS
         Core
@@ -18,6 +18,8 @@ find_package(Qt6 COMPONENTS
         Widgets
         Svg
         REQUIRED)
+
+add_subdirectory(wmi)
 
 set(state_monitor_files
         core/state_monitor/state_monitor_manager.cpp
@@ -62,19 +64,29 @@ set(gui_files
 set(gui_resource_files
         gui/icons.qrc)
 
+set(wmi_files
+        wmi/include/unistd.h
+        wmi/include/wmi.hpp
+        wmi/include/wmiclasses.hpp
+        wmi/include/wmiexception.hpp
+        wmi/include/wmiresult.hpp)
+
 add_executable(open_smart_shutdown
         ${state_monitor_files}
         ${state_evaluator_files}
         ${state_reader_files}
         ${triggered_executions_files}
         ${gui_files}
-        ${gui_resource_files})
+        ${gui_resource_files}
+        ${wmi_files})
 
 target_link_libraries(open_smart_shutdown
         Qt::Core
         Qt::Gui
         Qt::Widgets
-        Qt::Svg)
+        Qt::Svg
+        wmi)
+
 
 if (WIN32)
     set(DEBUG_SUFFIX)
