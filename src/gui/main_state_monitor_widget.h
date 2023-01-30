@@ -33,5 +33,4 @@ private:
     QList<StateMonitorTracker *> stateMonitorTrackers;
 
     StateMonitorManager stateMonitorManager;
-    ConfigureWidget::Configuration config;
 };

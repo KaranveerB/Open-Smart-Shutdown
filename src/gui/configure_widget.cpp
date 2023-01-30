@@ -1,6 +1,6 @@
 #include "configure_widget.h"
 
-ConfigureWidget::ConfigureWidget(Configuration config, QWidget *parent) : QDialog(parent) {
+ConfigureWidget::ConfigureWidget(StateMonitorManager::Configuration config, QWidget *parent) : QDialog(parent) {
     setWindowTitle("Configure");
 
     auto *mainLayout = new QVBoxLayout(this);
@@ -59,8 +59,8 @@ ConfigureWidget::ConfigureWidget(Configuration config, QWidget *parent) : QDialo
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
 
-ConfigureWidget::Configuration ConfigureWidget::getData() {
-    Configuration config;
+StateMonitorManager::Configuration ConfigureWidget::getData() {
+    StateMonitorManager::Configuration config;
     config.activationDelay = activationDelayEdit->time();
     config.triggerAction = triggerActionComboBox->currentData().value<EventTriggers::Action>();
     config.shellCommand = shellTextEdit->toPlainText();

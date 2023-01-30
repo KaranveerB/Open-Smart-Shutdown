@@ -1,8 +1,6 @@
 #include "main_state_monitor_widget.h"
 
 MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(parent) {
-    this->config = {EventTriggers::Action::Shutdown, QTime(0, 1, 0), ""};
-
     QStringList headerLabels;
     headerLabels << tr("Type") << tr("Name") << tr("Value") << tr("State") << tr("") << tr("");
 
@@ -66,10 +64,10 @@ void MainStateMonitorWidget::createNewStateMonitor() {
 }
 
 void MainStateMonitorWidget::configure() {
-    ConfigureWidget configureWidget(config);
+    ConfigureWidget configureWidget(stateMonitorManager.getConfig());
     configureWidget.exec();
     if (configureWidget.result() == QDialog::Accepted) {
-        config = configureWidget.getData();
+        stateMonitorManager.setConfig(configureWidget.getData());
     }
 }
 

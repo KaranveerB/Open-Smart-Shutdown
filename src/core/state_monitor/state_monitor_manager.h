@@ -4,6 +4,7 @@
 #include <map>
 #include <queue>
 #include <thread>
+#include <utility>
 #include <vector>
 
 #include <QList>
@@ -53,11 +54,26 @@ private:
     };
 
 public:
+    struct Configuration {
+        EventTriggers::Action triggerAction;
+        QTime activationDelay;
+        QString shellCommand;
+    };
+
     [[nodiscard]] unsigned int addStateMonitor(IStateMonitor *stateMonitor);
 
     void startMonitor();
 
     State *getState(unsigned int id) const;
+
+    Configuration getConfig() {
+        return config;
+    }
+
+    void setConfig(Configuration newConfig) {
+        this->config = std::move(newConfig);
+    }
+
 
 private:
     void scheduleStateReader(unsigned int id, IStateMonitor *stateMonitor);
@@ -72,6 +88,8 @@ private:
     std::thread stateMonitorThread;
 
     std::unordered_map<unsigned int, State *> statesMap;
+
+    Configuration config = {EventTriggers::Action::Shutdown, QTime(0, 1, 0), ""};
 
     unsigned int nextId = 0;
 signals:

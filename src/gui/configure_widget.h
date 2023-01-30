@@ -10,19 +10,16 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 
+#include "state_monitor/state_monitor_manager.h"
 #include "events/event_triggers.h"
 
 class ConfigureWidget : public QDialog {
 Q_OBJECT
 public:
-    struct Configuration {
-        EventTriggers::Action triggerAction;
-        QTime activationDelay;
-        QString shellCommand;
-    };
 
-    ConfigureWidget( Configuration config, QWidget *parent = nullptr);
-    Configuration getData();
+    ConfigureWidget(StateMonitorManager::Configuration config, QWidget *parent = nullptr);
+
+    StateMonitorManager::Configuration getData();
 
 private:
     QTimeEdit *activationDelayEdit;
