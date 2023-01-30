@@ -7,6 +7,7 @@
 
 #include "state_monitor/state_monitor_manager.h"
 
+#include "configure_widget.h"
 #include "state_monitor_tracker.h"
 #include "state_monitor_widget_delegate.h"
 #include "state_monitor_creator_widget.h"
@@ -20,6 +21,7 @@ public:
 
 public slots:
     void createNewStateMonitor();
+    void configure();
 
     void updateStateMonitorTrackerName(QString name);
     void updateStateMonitorTrackerState(QString state);
@@ -31,4 +33,5 @@ private:
     QList<StateMonitorTracker *> stateMonitorTrackers;
 
     StateMonitorManager stateMonitorManager;
+    ConfigureWidget::Configuration config;
 };

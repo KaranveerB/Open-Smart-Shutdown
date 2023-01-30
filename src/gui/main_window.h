@@ -3,10 +3,12 @@
 #include <chrono>
 
 #include <QHBoxLayout>
+#include <QListWidget>
 #include <QMainWindow>
 #include <QPushButton>
-#include <QListWidget>
+#include <QVBoxLayout>
 
+#include "configure_widget.h"
 #include "main_state_monitor_widget.h"
 
 class MainWindow : public QMainWindow {

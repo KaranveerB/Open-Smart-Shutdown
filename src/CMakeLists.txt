@@ -66,7 +66,7 @@ set(gui_files
         gui/state_monitor_creator_widget.cpp
         gui/state_monitor_creator_widget.h
         gui/state_monitor_widget_delegate.cpp
-        gui/state_monitor_widget_delegate.h)
+        gui/state_monitor_widget_delegate.h gui/configure_widget.cpp gui/configure_widget.h)
 
 set(gui_resource_files
         gui/icons.qrc)

@@ -1,6 +1,8 @@
 #include "main_state_monitor_widget.h"
 
 MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(parent) {
+    this->config = {EventTriggers::Action::Shutdown, QTime(0, 1, 0), ""};
+
     QStringList headerLabels;
     headerLabels << tr("Type") << tr("Name") << tr("Value") << tr("State") << tr("") << tr("");
 
@@ -27,11 +29,11 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(pa
 
     setItemDelegate(new StateMonitorWidgetDelegate);
 
-
     stateMonitorManager.startMonitor();
 }
 
-void MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, StateMonitorCreatorWidget::StateMonitorMetaInfo metaInfo) {
+void
+MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, StateMonitorCreatorWidget::StateMonitorMetaInfo metaInfo) {
     unsigned int id = stateMonitorManager.addStateMonitor(sm);
     auto *newStateMonitorTracker = new StateMonitorTracker(id, stateMonitorManager, this);
     stateMonitorTrackers.append(newStateMonitorTracker);
@@ -60,6 +62,14 @@ void MainStateMonitorWidget::createNewStateMonitor() {
         IStateMonitor *stateMonitor = smCreatorWidget.getStateMonitor();
         auto metaInfo = smCreatorWidget.getStateMonitorMetaInfo();
         MainStateMonitorWidget::addStateMonitor(stateMonitor, metaInfo);
+    }
+}
+
+void MainStateMonitorWidget::configure() {
+    ConfigureWidget configureWidget(config);
+    configureWidget.exec();
+    if (configureWidget.result() == QDialog::Accepted) {
+        config = configureWidget.getData();
     }
 }
 

@@ -6,16 +6,27 @@ MainWindow::MainWindow() : QMainWindow() {
 
     auto *mainWidget = new QWidget(this);
     auto *mainLayout = new QVBoxLayout(mainWidget);
-    mainWidget->setLayout(mainLayout);
 
     auto *mainStateMonitorWidget = new MainStateMonitorWidget;
     mainLayout->addWidget(mainStateMonitorWidget);
 
-    auto *createLayoutButton = new QPushButton("Add state monitor", this);
-    mainLayout->addWidget(createLayoutButton);
+    auto *configureOptionsWidget = new QWidget(this);
+    auto *configureOptionsLayout = new QHBoxLayout(configureOptionsWidget);
+    mainLayout->addWidget(configureOptionsWidget);
 
-    QObject::connect(createLayoutButton, &QPushButton::pressed, mainStateMonitorWidget,
+    auto *addStateMonitorButton = new QPushButton("Add state monitor", this);
+    auto *configureButton = new QPushButton("Configure", this);
+    configureOptionsLayout->addWidget(addStateMonitorButton);
+    configureOptionsLayout->addWidget(configureButton);
+
+    auto *toggleActiveButton = new QPushButton("Start", this);
+    mainLayout->addWidget(toggleActiveButton);
+
+
+    QObject::connect(addStateMonitorButton, &QPushButton::pressed, mainStateMonitorWidget,
                      &MainStateMonitorWidget::createNewStateMonitor);
+    QObject::connect(configureButton, &QPushButton::pressed, mainStateMonitorWidget,
+                     &MainStateMonitorWidget::configure);
 
     setCentralWidget(mainWidget);
 }
