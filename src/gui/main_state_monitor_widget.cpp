@@ -26,8 +26,6 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(pa
     setRootIsDecorated(false);
 
     setItemDelegate(new StateMonitorWidgetDelegate);
-
-    stateMonitorManager.startMonitor();
 }
 
 void
@@ -69,6 +67,10 @@ void MainStateMonitorWidget::configure() {
     if (configureWidget.result() == QDialog::Accepted) {
         stateMonitorManager.setConfig(configureWidget.getData());
     }
+}
+
+void MainStateMonitorWidget::toggleStart() {
+    stateMonitorManager.toggleStart();
 }
 
 int MainStateMonitorWidget::getRow(StateMonitorTracker *caller) {

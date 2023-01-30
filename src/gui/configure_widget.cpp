@@ -28,6 +28,7 @@ ConfigureWidget::ConfigureWidget(StateMonitorManager::Configuration config, QWid
     triggerActionComboBox = new QComboBox(this);
 
     triggerActionComboBox->addItem("Hibernate", QVariant::fromValue(EventTriggers::Action::Hibernate));
+    triggerActionComboBox->addItem("Notify", QVariant::fromValue(EventTriggers::Action::Notify));
     triggerActionComboBox->addItem("Sleep", QVariant::fromValue(EventTriggers::Action::Sleep));
     triggerActionComboBox->addItem("Shutdown", QVariant::fromValue(EventTriggers::Action::Shutdown));
     triggerActionComboBox->addItem("Shell", QVariant::fromValue(EventTriggers::Action::Shell));
@@ -37,7 +38,7 @@ ConfigureWidget::ConfigureWidget(StateMonitorManager::Configuration config, QWid
     shellTextEdit = new QTextEdit(this);
     shellTextEdit->setPlaceholderText("Shell command");
     shellTextEdit->setEnabled(false);
-    shellTextEdit->setText(config.shellCommand); // do this regardless of if shell is selected
+    shellTextEdit->setText(QLatin1String(config.shellCommand)); // do this regardless of if shell is selected
     mainLayout->addWidget(shellTextEdit);
 
     QObject::connect(triggerActionComboBox, &QComboBox::currentIndexChanged, [=](const QVariant &data) {
@@ -63,6 +64,6 @@ StateMonitorManager::Configuration ConfigureWidget::getData() {
     StateMonitorManager::Configuration config;
     config.activationDelay = activationDelayEdit->time();
     config.triggerAction = triggerActionComboBox->currentData().value<EventTriggers::Action>();
-    config.shellCommand = shellTextEdit->toPlainText();
+    config.shellCommand = shellTextEdit->toPlainText().toStdString();
     return config;
 }

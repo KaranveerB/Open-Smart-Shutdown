@@ -22,6 +22,7 @@ public:
 public slots:
     void createNewStateMonitor();
     void configure();
+    void toggleStart();
 
     void updateStateMonitorTrackerName(QString name);
     void updateStateMonitorTrackerState(QString state);

@@ -7,12 +7,34 @@
 class State : public QObject {
 Q_OBJECT
 public:
-    bool getState() const {
+    typedef enum {
+        Inactive,
+        Active,
+        Buffered,
+        Waiting // TODO: Integrate this
+    } StateStatus;
+
+    State(unsigned int baseBufferCount = 3) : baseBufferCount(baseBufferCount) {}
+
+    StateStatus getState() const {
         return state;
     }
 
-    void setState(bool newState) {
-        state = newState;
+    void update(bool isActive) {
+        if (isActive && state != StateStatus::Active) {
+            state = StateStatus::Active;
+            bufferCount = baseBufferCount;
+        } else if (!isActive && state != StateStatus::Inactive) {
+            if (baseBufferCount > 0) {
+                state = StateStatus::Buffered;
+                bufferCount--;
+                if (bufferCount == 0) {
+                    state = StateStatus::Inactive;
+                }
+            } else {
+                state = StateStatus::Inactive;
+            }
+        }
     }
 
     std::string getStateValueString() const {
@@ -24,8 +46,10 @@ public:
     }
 
 private:
-    bool state = false; // TODO: Make state thread safe
-    std::string stateValueString;
+    unsigned int baseBufferCount;
+    unsigned int bufferCount;
 
-    friend class StateMonitorManager;
+    StateStatus state = Inactive;
+
+    std::string stateValueString;
 };

@@ -27,6 +27,8 @@ MainWindow::MainWindow() : QMainWindow() {
                      &MainStateMonitorWidget::createNewStateMonitor);
     QObject::connect(configureButton, &QPushButton::pressed, mainStateMonitorWidget,
                      &MainStateMonitorWidget::configure);
+    QObject::connect(toggleActiveButton, &QPushButton::pressed, mainStateMonitorWidget,
+                     &MainStateMonitorWidget::toggleStart);
 
     setCentralWidget(mainWidget);
 }

@@ -57,12 +57,10 @@ public:
     struct Configuration {
         EventTriggers::Action triggerAction;
         QTime activationDelay;
-        QString shellCommand;
+        std::string shellCommand;
     };
 
     [[nodiscard]] unsigned int addStateMonitor(IStateMonitor *stateMonitor);
-
-    void startMonitor();
 
     State *getState(unsigned int id) const;
 
@@ -74,11 +72,21 @@ public:
         this->config = std::move(newConfig);
     }
 
+    void toggleStart() {
+        started = !started;
+        if (started) {
+            startMonitor();
+        }
+    }
 
 private:
+    void startMonitor();
+
     void scheduleStateReader(unsigned int id, IStateMonitor *stateMonitor);
 
-    [[noreturn]] void monitorStates();
+    void monitorStates();
+
+    void checkEventTriggerCondition();
 
     std::priority_queue<ScheduledStateReader, std::vector<ScheduledStateReader>,
             ScheduledStateReader::compare> scheduledStateReaderQueue =
@@ -92,6 +100,13 @@ private:
     Configuration config = {EventTriggers::Action::Shutdown, QTime(0, 1, 0), ""};
 
     unsigned int nextId = 0;
+
+    bool started = false;
+
+    bool readyForEventTrigger = false;
+    std::chrono::time_point<std::chrono::steady_clock> eventTriggerTime;
+
+
 signals:
 
     void stateChanged(unsigned int id, State *state) const;

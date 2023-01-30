@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QSystemTrayIcon>
 
 class EventTriggers {
 public:
@@ -8,8 +9,11 @@ public:
         Shutdown,
         Hibernate,
         Sleep,
+        Notify,
         Shell
     } Action;
+
+    static void triggerEvent(EventTriggers::Action action, std::string shellCommand = "");
 };
 
 
