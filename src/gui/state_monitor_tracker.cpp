@@ -41,7 +41,7 @@ void StateMonitorTracker::updateState(State &state) {
     if (newStateValueQString != stateValueQString) {
         stateValueQString = newStateValueQString;
         emit stateMonitorTrackerStateValueChanged(stateValueQString);
-        stateValueQString = stateValueQString;
+        stateValueQString = newStateValueQString;
     }
 
 }
