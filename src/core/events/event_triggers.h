@@ -28,6 +28,8 @@ public:
     static void triggerEvent(EventTriggers::Action action, std::string shellCommand = "");
 
     static void showNotification();
+
+    static bool acquireShutdownPrivilege();
 };
 
 

@@ -5,8 +5,8 @@ void EventTriggers::triggerEvent(EventTriggers::Action action, std::string shell
         case Shutdown: {
 #ifdef WIN32
             // We do an aggressive (but graceful) shutdown becuase this should reliably shut down, even if user is afk
-            ::InitiateShutdownW(NULL, NULL, 30, SHUTDOWN_POWEROFF | SHUTDOWN_FORCE_SELF | SHUTDOWN_FORCE_OTHERS,
-                                SHTDN_REASON_FLAG_PLANNED);
+            ::InitiateShutdown(NULL, NULL, 30, SHUTDOWN_POWEROFF | SHUTDOWN_FORCE_SELF | SHUTDOWN_FORCE_OTHERS,
+                               SHTDN_REASON_FLAG_PLANNED);
 #elif
 #error unsupported platform for shutdowns which is not handled yet
 #endif
@@ -45,4 +45,22 @@ void EventTriggers::showNotification() {
     trayIcon.show();
     trayIcon.showMessage("yo", "ay", QSystemTrayIcon::Information, 10000);
     trayIcon.deleteLater();
+}
+
+bool EventTriggers::acquireShutdownPrivilege() {
+#ifdef WIN32
+    HANDLE hToken;
+    TOKEN_PRIVILEGES tkp;
+    bool result = false;
+    if (OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken)) {
+        LookupPrivilegeValue(NULL, SE_SHUTDOWN_NAME, &tkp.Privileges[0].Luid);
+        tkp.PrivilegeCount = 1;
+        tkp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+        result = AdjustTokenPrivileges(hToken, FALSE, &tkp, 0, (PTOKEN_PRIVILEGES) NULL, 0);
+        CloseHandle(hToken);
+    }
+    return result;
+#else
+#error system not supported for shutdown
+#endif
 }

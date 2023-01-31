@@ -34,6 +34,12 @@ MainWindow::MainWindow() : QMainWindow() {
                      &MainWindow::toggleStart);
 
     setCentralWidget(mainWidget);
+
+    if (!EventTriggers::acquireShutdownPrivilege()) {
+        QMessageBox::critical(this, "Error",
+                              "Could not acquire shutdown privilege. Shutdown, hibernate, and sleep may not work. "
+                              "Running as admin may help.");
+    }
 }
 
 void MainWindow::updateTimeTillEventTrigger(QTime timeRemaining) {
