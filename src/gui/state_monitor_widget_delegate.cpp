@@ -6,12 +6,6 @@ void StateMonitorWidgetDelegate::paint(QPainter *painter, const QStyleOptionView
     switch (index.column()) {
         case 4: {
             QRect rect = option.rect;
-            editIcon.paint(painter, rect, Qt::AlignCenter);
-            break;
-        }
-
-        case 5: {
-            QRect rect = option.rect;
             trashIcon.paint(painter, rect, Qt::AlignCenter);
             break;
         }

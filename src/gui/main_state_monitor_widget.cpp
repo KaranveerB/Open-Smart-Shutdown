@@ -1,8 +1,10 @@
 #include "main_state_monitor_widget.h"
 
+// TODO: Add edit button
+
 MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(parent) {
     QStringList headerLabels;
-    headerLabels << tr("Type") << tr("Name") << tr("Value") << tr("State") << tr("") << tr("");
+    headerLabels << tr("Type") << tr("Name") << tr("Value") << tr("State") << tr("");
 
     setHeaderLabels(headerLabels);
 
@@ -17,8 +19,6 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(pa
     header->resizeSection(3, fm.horizontalAdvance("Buffer (99)  "));
     header->resizeSection(4, 24);
     header->setSectionResizeMode(4, QHeaderView::Fixed);
-    header->resizeSection(5, 24);
-    header->setSectionResizeMode(5, QHeaderView::Fixed);
     header->setStretchLastSection(false);
 
     setSelectionBehavior(QAbstractItemView::SelectRows);
