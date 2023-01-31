@@ -15,6 +15,7 @@ State *StateMonitorManager::getState(unsigned int id) const {
 void StateMonitorManager::startMonitor() {
     stateMonitorThread = std::thread(&StateMonitorManager::monitorStates, this);
     stateMonitorThread.detach();
+    emit timeTillEventTriggerChanged(config.activationDelay);
 }
 
 void StateMonitorManager::monitorStates() {
@@ -46,11 +47,13 @@ void StateMonitorManager::scheduleStateReader(unsigned int id, IStateMonitor *st
 }
 
 void StateMonitorManager::checkEventTriggerCondition() {
-    for (const auto &state : statesMap) {
+    for (const auto &state: statesMap) {
         if (state.second->getState() == State::StateStatus::Inactive) {
             if (readyForEventTrigger) {
                 readyForEventTrigger = false;
+                emit timeTillEventTriggerChanged(config.activationDelay);
             }
+            return;
         }
     }
 
@@ -58,11 +61,15 @@ void StateMonitorManager::checkEventTriggerCondition() {
         readyForEventTrigger = true;
         unsigned int delaySeconds = config.activationDelay.minute() * 60 + config.activationDelay.second();
         eventTriggerTime = std::chrono::steady_clock::now() + std::chrono::seconds(delaySeconds);
-    } else {
-        if (eventTriggerTime <= std::chrono::steady_clock::now()) {
-            EventTriggers::triggerEvent(config.triggerAction, config.shellCommand);
-        }
     }
 
+    auto timeDiff = eventTriggerTime - std::chrono::steady_clock::now();
+    int timeDiff_ms = (int) std::chrono::duration_cast<std::chrono::milliseconds>(timeDiff).count();
+    QTime timeRemaining = QTime::fromMSecsSinceStartOfDay(timeDiff_ms);
+    emit timeTillEventTriggerChanged(timeRemaining);
 
+    if (eventTriggerTime <= std::chrono::steady_clock::now()) {
+        emit timeTillEventTriggerChanged(QTime(0, 0, 0));
+        EventTriggers::triggerEvent(config.triggerAction, config.shellCommand);
+    }
 }

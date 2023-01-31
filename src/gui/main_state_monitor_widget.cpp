@@ -26,6 +26,9 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(pa
     setRootIsDecorated(false);
 
     setItemDelegate(new StateMonitorWidgetDelegate);
+
+    QObject::connect(&stateMonitorManager, &StateMonitorManager::timeTillEventTriggerChanged, this,
+                     &MainStateMonitorWidget::updateTimeTillEventTrigger);
 }
 
 void
@@ -69,8 +72,8 @@ void MainStateMonitorWidget::configure() {
     }
 }
 
-void MainStateMonitorWidget::toggleStart() {
-    stateMonitorManager.toggleStart();
+bool MainStateMonitorWidget::toggleStart() {
+    return stateMonitorManager.toggleStart();
 }
 
 int MainStateMonitorWidget::getRow(StateMonitorTracker *caller) {
@@ -113,4 +116,8 @@ void MainStateMonitorWidget::updateStateMonitorTrackerStateValue(QString stateVa
     if (item) {
         item->setText(2, stateValue);
     }
+}
+
+void MainStateMonitorWidget::updateTimeTillEventTrigger(QTime timeRemaining) {
+    emit timeTillEventTriggerUpdated(timeRemaining);
 }

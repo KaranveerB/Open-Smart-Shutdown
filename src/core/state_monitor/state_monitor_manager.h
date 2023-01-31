@@ -72,11 +72,15 @@ public:
         this->config = std::move(newConfig);
     }
 
-    void toggleStart() {
+    // returns new state
+    bool toggleStart() {
         started = !started;
         if (started) {
             startMonitor();
+        } else {
+            readyForEventTrigger = false;
         }
+        return started;
     }
 
 private:
@@ -112,4 +116,6 @@ signals:
     void stateChanged(unsigned int id, State *state) const;
 
     void monitoredStatesChanged() const;
+
+    void timeTillEventTriggerChanged(QTime timeRemaining) const;
 };

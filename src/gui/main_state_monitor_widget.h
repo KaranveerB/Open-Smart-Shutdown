@@ -2,8 +2,9 @@
 
 #include <chrono>
 
-#include <QTreeWidget>
 #include <QHeaderView>
+#include <QObject>
+#include <QTreeWidget>
 
 #include "state_monitor/state_monitor_manager.h"
 
@@ -19,14 +20,19 @@ public:
 
     void addStateMonitor(IStateMonitor *sm, StateMonitorCreatorWidget::StateMonitorMetaInfo metaInfo); // TODO: Add proper fields
 
+    bool toggleStart();
 public slots:
     void createNewStateMonitor();
     void configure();
-    void toggleStart();
 
     void updateStateMonitorTrackerName(QString name);
     void updateStateMonitorTrackerState(QString state);
     void updateStateMonitorTrackerStateValue(QString stateValue);
+
+    void updateTimeTillEventTrigger(QTime timeRemaining);
+
+signals:
+    void timeTillEventTriggerUpdated(QTime timeRemaining);
 
 private:
     int getRow(StateMonitorTracker *caller);
