@@ -10,7 +10,7 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(pa
     QHeaderView *header = this->header();
 
     header->setMinimumSectionSize(24);
-    header->resizeSection(0, fm.horizontalAdvance("Shell  "));
+    header->resizeSection(0, fm.horizontalAdvance("Shell     ")); // clips too often so extended in size
     header->setSectionResizeMode(1, QHeaderView::Stretch);
     header->setSectionResizeMode(2, QHeaderView::Stretch);
     header->resizeSection(2, fm.horizontalAdvance("99:99:99  "));
