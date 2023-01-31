@@ -66,7 +66,9 @@ set(gui_files
         gui/state_monitor_creator_widget.cpp
         gui/state_monitor_creator_widget.h
         gui/state_monitor_widget_delegate.cpp
-        gui/state_monitor_widget_delegate.h gui/configure_widget.cpp gui/configure_widget.h)
+        gui/state_monitor_widget_delegate.h
+        gui/configure_widget.cpp
+        gui/configure_widget.h)
 
 set(gui_resource_files
         gui/icons.qrc)
@@ -96,6 +98,13 @@ target_link_libraries(open_smart_shutdown
         Qt::Svg
         wmi)
 
+if (WIN32)
+    target_link_libraries(open_smart_shutdown powrprof)
+    add_executable(GuiApplication WIN32 main.cpp)
+    set_target_properties(open_smart_shutdown PROPERTIES WIN32_EXECUTABLE TRUE)
+endif()
+
+set_target_properties(open_smart_shutdown PROPERTIES OUTPUT_NAME "")
 
 if (WIN32)
     set(DEBUG_SUFFIX)
