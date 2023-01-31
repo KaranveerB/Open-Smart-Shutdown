@@ -11,10 +11,10 @@ public:
         Inactive,
         Active,
         Buffered,
-        Waiting // TODO: Integrate this
+        Waiting
     } StateStatus;
 
-    State(unsigned int baseBufferCount = 3) : baseBufferCount(baseBufferCount) {}
+    State(unsigned int baseBufferCount = 3) : baseBufferCount(baseBufferCount), bufferCount(baseBufferCount) {}
 
     StateStatus getState() const {
         return state;
@@ -43,6 +43,10 @@ public:
 
     void setStateValueString(std::string newStateValueString) {
         stateValueString = std::move(newStateValueString);
+    }
+
+    unsigned int getBufferCount() {
+        return bufferCount;
     }
 
 private:

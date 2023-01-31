@@ -11,21 +11,37 @@ StateMonitorTracker::StateMonitorTracker(unsigned int id, const StateMonitorMana
 }
 
 void StateMonitorTracker::updateState(State &state) {
-    bool stateBool = state.getState();
+    State::StateStatus stateStatus = state.getState();
 
-    // TODO: Switch to have colors as well (keep text too for our friends with protanopia out there)
-    QString newStateQString = stateBool ? "Active" : "Inactive";
+    QString newStateQString;
+
+    switch (stateStatus) {
+        case State::Active:
+            newStateQString = "Active";
+            break;
+        case State::Inactive:
+            newStateQString = "Inactive";
+            break;
+        case State::Buffered:
+            newStateQString = QLatin1String("Buffer (" + std::to_string(state.getBufferCount()) + ")");
+            break;
+        case State::Waiting:
+            newStateQString = "Waiting";
+            break;
+    }
+
     QString newStateValueQString = QString::fromStdString(state.getStateValueString());
-
 
     if (newStateQString != stateQString) {
         stateQString = newStateQString;
         emit stateMonitorTrackerStateChanged(stateQString);
+        stateQString = newStateQString;
     }
 
     if (newStateValueQString != stateValueQString) {
-        stateValueQString= newStateValueQString;
+        stateValueQString = newStateValueQString;
         emit stateMonitorTrackerStateValueChanged(stateValueQString);
+        stateValueQString = stateValueQString;
     }
 
 }

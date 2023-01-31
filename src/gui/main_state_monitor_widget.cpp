@@ -14,7 +14,7 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(pa
     header->setSectionResizeMode(1, QHeaderView::Stretch);
     header->setSectionResizeMode(2, QHeaderView::Stretch);
     header->resizeSection(2, fm.horizontalAdvance("99:99:99  "));
-    header->resizeSection(3, fm.horizontalAdvance("Inactive  "));
+    header->resizeSection(3, fm.horizontalAdvance("Buffer (99)  "));
     header->resizeSection(4, 24);
     header->setSectionResizeMode(4, QHeaderView::Fixed);
     header->resizeSection(5, 24);
