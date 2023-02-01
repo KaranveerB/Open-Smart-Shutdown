@@ -40,7 +40,8 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
     readerTypeSelector->addItem("Network usage", QVariant(StateReaderType::Network));
     readerTypeSelector->addItem("Disk usage", QVariant(StateReaderType::Disk));
     readerTypeSelector->addItem("CPU usage", QVariant(StateReaderType::Cpu));
-//    readerTypeSelector->addItem("Shell command", QVariant(StateReaderType::Shell)); // TODO: Implement
+    readerTypeSelector->addItem("Shell command (String output)", QVariant(StateReaderType::StrShell));
+    readerTypeSelector->addItem("Shell command (Int/Float output)", QVariant(StateReaderType::FloatShell));
     mainWidgetLayout->addWidget(readerTypeSelector);
 
     QObject::connect(readerTypeSelector, &QComboBox::currentIndexChanged,
@@ -55,7 +56,7 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
 
     auto *evaluatorTypeSelector = new QComboBox(mainWidget);
     evaluatorTypeSelector->addItem("Between", QVariant(StateEvaluatorType::InRange));
-    evaluatorTypeSelector->addItem("Exactly", QVariant(StateEvaluatorType::Boolean));
+    evaluatorTypeSelector->addItem("Equal", QVariant(StateEvaluatorType::Equal));
     evaluatorTypeSelector->addItem("Greater than", QVariant(StateEvaluatorType::Greater));
     evaluatorTypeSelector->addItem("Greater than or equal", QVariant(StateEvaluatorType::GreaterOrEqual));
     evaluatorTypeSelector->addItem("Less than", QVariant(StateEvaluatorType::Less));
@@ -126,6 +127,23 @@ StateEvaluator<float> *StateMonitorCreatorWidget::createStateEvaluator<float>() 
 }
 
 template<>
+StateEvaluator<std::string> *StateMonitorCreatorWidget::createStateEvaluator<std::string>() const {
+    std::string data1;
+    std::string data2;
+
+    auto *data1Input = (QLineEdit *) evaluatorDataInput1;
+    auto *data2Input = (QLineEdit *) evaluatorDataInput2;
+    data1 = data1Input->text().toStdString();
+
+    if (currentStateEvaluatorType == StateEvaluatorType::InRange) {
+        data2 = data2Input->text().toStdString();
+    }
+
+    return createStateEvaluator<std::string>(data1, data2);
+
+}
+
+template<>
 StateEvaluator<QTime> *StateMonitorCreatorWidget::createStateEvaluator<QTime>() const {
     QTime data1;
     QTime data2;
@@ -150,13 +168,13 @@ StateEvaluator<T> *StateMonitorCreatorWidget::createStateEvaluator(T data1, T da
         case Greater:
             return new GreaterThanStateEvaluator<T>(data1);
         case Less:
-            break;
+            return new LessThanStateEvaluator<T>(data1);
         case GreaterOrEqual:
-            break;
+            return new GreaterThanEqualStateEvaluator<T>(data1);
         case LessOrEqual:
-            break;
-        case Boolean:
-            break;
+            return new LessThanEqualStateEvaluator<T>(data1);
+        case Equal:
+            return new EqualStateEvaluator<T>(data1);
     }
 }
 
@@ -187,8 +205,20 @@ IStateMonitor *StateMonitorCreatorWidget::getStateMonitor() const {
             auto *stateEvaluator = createStateEvaluator<T>();
             return new StateMonitor<T>(stateReader, stateEvaluator);
         }
-        case Shell:
-            break;
+        case StrShell: {
+            typedef std::string T;
+            std::string readerData = readerDataInput->text().toStdString();
+            auto *stateReader = new StringShellStateReader(readerData);
+            auto *stateEvaluator = createStateEvaluator<T>();
+            return new StateMonitor<T>(stateReader, stateEvaluator);
+        }
+        case FloatShell: {
+            typedef float T;
+            std::string readerData = readerDataInput->text().toStdString();
+            auto *stateReader = new FloatShellStateReader(readerData);
+            auto *stateEvaluator = createStateEvaluator<T>();
+            return new StateMonitor<T>(stateReader, stateEvaluator);
+        }
     }
 }
 
@@ -216,15 +246,19 @@ StateMonitorCreatorWidget::StateMonitorMetaInfo StateMonitorCreatorWidget::getSt
         case Network:
             metaInfo.typeName = "Net";
             break;
-        case Shell:
-            metaInfo.typeName = "Shell";
+        case FloatShell:
+            metaInfo.typeName = "Shell (Int/Float output)";
+            break;
+        case StrShell:
+            metaInfo.typeName = "Shell (String output)";
             break;
     }
     return metaInfo;
 }
 
 void StateMonitorCreatorWidget::updateReaderDataInputWidget(StateReaderType stateReaderType) {
-    readerDataInput->setEnabled(stateReaderType == StateReaderType::Shell); // currently, only relevant for shell
+    readerDataInput->setEnabled(stateReaderType == StateReaderType::FloatShell ||
+                                stateReaderType == StateReaderType::StrShell); // currently, only relevant for shell
 
     currentStateReaderType = stateReaderType;
 
@@ -240,6 +274,7 @@ void StateMonitorCreatorWidget::updateReaderDataInputWidget(StateReaderType stat
             ((QTimeEdit *) evaluatorDataInput2)->setTime(truncateQTimeToMinutes(QTime::currentTime()));
         }
             break;
+        case FloatShell:
         case Cpu:
         case Disk:
         case Network: {
@@ -247,9 +282,11 @@ void StateMonitorCreatorWidget::updateReaderDataInputWidget(StateReaderType stat
             evaluatorDataInput2 = new QDoubleSpinBox(evaluatorDataInputWidget);
         }
             break;
-        case Shell:
-            // TODO: Handle
-            break;
+        case StrShell: {
+            // TODO: Set it so str shell only works with exactly as otherwise, it doesn't really make sense
+            evaluatorDataInput1 = new QLineEdit(evaluatorDataInputWidget);
+            evaluatorDataInput2 = new QLineEdit(evaluatorDataInputWidget);
+        }
 
     }
 

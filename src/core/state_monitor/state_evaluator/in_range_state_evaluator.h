@@ -7,11 +7,11 @@ class InRangeStateEvaluator : public StateEvaluator<T> {
 public:
     InRangeStateEvaluator(T min, T max) : min{min}, max{max} {};
 
-    bool evaluateState(T state) const;
+    bool evaluateState(T state) const {
+        return min <= state && state <= max;
+    }
 
 private:
     T min;
     T max;
 };
-
-#include "in_range_state_evaluator.tpp"

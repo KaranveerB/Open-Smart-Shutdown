@@ -7,10 +7,10 @@ class GreaterThanStateEvaluator : public StateEvaluator<T> {
 public:
     explicit GreaterThanStateEvaluator(T min) : min{min} {};
 
-    bool evaluateState(T state) const;
+    bool evaluateState(T state) const {
+        return state > min;
+    };
 
 private:
     T min;
 };
-
-#include "greater_than_state_evaluator.tpp"

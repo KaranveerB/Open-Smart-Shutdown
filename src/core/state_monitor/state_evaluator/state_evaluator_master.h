@@ -9,7 +9,11 @@
 
 #include "state_evaluator.h"
 
+#include "equal_state_evaluator.h"
 #include "greater_than_state_evaluator.h"
+#include "greater_than_equal_state_evaluator.h"
+#include "less_than_state_evaluator.h"
+#include "less_than_equal_state_evaluator.h"
 #include "in_range_state_evaluator.h"
 
 typedef enum {
@@ -18,7 +22,7 @@ typedef enum {
     Less,
     GreaterOrEqual,
     LessOrEqual,
-    Boolean,
+    Equal,
 } StateEvaluatorType;
 
 Q_DECLARE_METATYPE(StateEvaluatorType)

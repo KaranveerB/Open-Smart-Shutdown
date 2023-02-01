@@ -44,6 +44,9 @@ private:
     StateEvaluator<float> *createStateEvaluator() const;
 
     template<>
+    StateEvaluator<std::string> *createStateEvaluator() const;
+
+    template<>
     StateEvaluator<QTime> *createStateEvaluator() const;
 
     template<class T>
