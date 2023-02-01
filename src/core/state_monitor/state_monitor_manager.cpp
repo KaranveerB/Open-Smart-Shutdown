@@ -15,9 +15,6 @@ State *StateMonitorManager::getState(unsigned int id) const {
 void StateMonitorManager::deleteStateMonitor(unsigned int id) {
     if (started) {
         statesMap.at(id)->scheduleForDeletion();
-    } else {
-        delete statesMap.at(id);
-        statesMap.erase(id);
     }
 }
 
