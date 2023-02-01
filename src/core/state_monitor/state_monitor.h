@@ -7,6 +7,8 @@
 
 class IStateMonitor {
 public:
+    virtual ~IStateMonitor() = default;
+
     virtual bool getStateActive() = 0;
 
     // returns string representation of state value used when getStateActive() was last called
@@ -33,6 +35,11 @@ public:
             throw std::logic_error("can't create state monitor with nullptr state reader or state evaluator");
         }
     };
+
+    ~StateMonitor() {
+        delete stateReader;
+        delete stateEvaluator;
+    }
 
     bool getStateActive() override;
 

@@ -29,13 +29,13 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(pa
 
     QObject::connect(&stateMonitorManager, &StateMonitorManager::timeTillEventTriggerChanged, this,
                      &MainStateMonitorWidget::updateTimeTillEventTrigger);
+    QObject::connect(this, &QTreeWidget::itemClicked, this, &MainStateMonitorWidget::handleItemClicked);
 }
 
 void
 MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, StateMonitorCreatorWidget::StateMonitorMetaInfo metaInfo) {
     unsigned int id = stateMonitorManager.addStateMonitor(sm);
     auto *newStateMonitorTracker = new StateMonitorTracker(id, stateMonitorManager, this);
-    stateMonitorTrackers.append(newStateMonitorTracker);
 
     auto *item = new QTreeWidgetItem; // TODO: Customize this
 
@@ -44,6 +44,7 @@ MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, StateMonitorCreatorWi
     item->setText(3, "Waiting");
 
     addTopLevelItem(item);
+    stateMonitorTrackerMap[indexOfTopLevelItem(item)] = newStateMonitorTracker;
 
     connect(newStateMonitorTracker, &StateMonitorTracker::stateMonitorTrackerStateChanged, this,
             &MainStateMonitorWidget::updateStateMonitorTrackerState);
@@ -51,7 +52,8 @@ MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, StateMonitorCreatorWi
             &MainStateMonitorWidget::updateStateMonitorTrackerName);
     connect(newStateMonitorTracker, &StateMonitorTracker::stateMonitorTrackerStateValueChanged, this,
             &MainStateMonitorWidget::updateStateMonitorTrackerStateValue);
-
+    connect(newStateMonitorTracker, &StateMonitorTracker::scheduleStateMonitorDeletion, &stateMonitorManager,
+            &StateMonitorManager::deleteStateMonitor);
 }
 
 void MainStateMonitorWidget::createNewStateMonitor() {
@@ -77,13 +79,30 @@ bool MainStateMonitorWidget::toggleStart() {
 }
 
 int MainStateMonitorWidget::getRow(StateMonitorTracker *caller) {
-    int row = 0;
-    for (auto const *stateMonitorWidget: stateMonitorTrackers) {
-        if (caller == stateMonitorWidget) {
-            return row;
-        } else {
-            row++;
+    for (const auto &[key, value]: stateMonitorTrackerMap) {
+        if (value == caller) {
+            return key;
         }
+    }
+    return -1;
+}
+
+void MainStateMonitorWidget::handleItemClicked(QTreeWidgetItem *item, int column) {
+    if (column == 4) { // delete button
+        int row = indexOfTopLevelItem(item);
+        takeTopLevelItem(row);
+        auto *stateMonitorTracker = stateMonitorTrackerMap.at(row);
+
+        stateMonitorTracker->deleteStateMonitor();
+        stateMonitorTrackerMap.erase(row);
+        for (auto it = stateMonitorTrackerMap.begin(); it != stateMonitorTrackerMap.end(); it++) {
+            if (it->first > row) {
+                auto node = stateMonitorTrackerMap.extract(it->first);
+                node.key() = it->first - 1;
+                stateMonitorTrackerMap.insert(std::move(node));
+            }
+        }
+        delete item;
     }
 }
 

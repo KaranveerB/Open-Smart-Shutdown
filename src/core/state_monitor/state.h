@@ -49,11 +49,22 @@ public:
         return bufferCount;
     }
 
+    void scheduleForDeletion() {
+        scheduledForDeletion = true;
+    }
+
+    bool isScheduledForDeletion() {
+        return scheduledForDeletion;
+    }
+
 private:
+
     unsigned int baseBufferCount;
     unsigned int bufferCount;
 
-    StateStatus state = Inactive;
+    bool scheduledForDeletion = false;
+
+    StateStatus state = Waiting;
 
     std::string stateValueString;
 };

@@ -11,14 +11,14 @@
 class StateMonitorTracker : public QObject {
 Q_OBJECT
 public:
-    StateMonitorTracker(unsigned int id, const StateMonitorManager &stateMonitorItem,
+    StateMonitorTracker(unsigned int id, const StateMonitorManager &stateMonitorManager,
                         QObject *parent = nullptr);
 
     void updateState(State &state);
 
-private:
-    unsigned int getId() const;
+    void deleteStateMonitor();
 
+private:
     unsigned int id;
     QString nameQString;
     QString stateQString;
@@ -35,5 +35,7 @@ signals:
     void stateMonitorTrackerStateChanged(QString state);
 
     void stateMonitorTrackerStateValueChanged(QString stateValue);
+
+    void scheduleStateMonitorDeletion(unsigned int id);
 
 };

@@ -110,6 +110,8 @@ private:
     bool readyForEventTrigger = false;
     std::chrono::time_point<std::chrono::steady_clock> eventTriggerTime;
 
+public slots:
+    void deleteStateMonitor(unsigned int id);
 
 signals:
 

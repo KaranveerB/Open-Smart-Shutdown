@@ -31,13 +31,14 @@ public slots:
 
     void updateTimeTillEventTrigger(QTime timeRemaining);
 
+    void handleItemClicked(QTreeWidgetItem *item, int column);
 signals:
     void timeTillEventTriggerUpdated(QTime timeRemaining);
 
 private:
     int getRow(StateMonitorTracker *caller);
 
-    QList<StateMonitorTracker *> stateMonitorTrackers;
+    std::unordered_map<int, StateMonitorTracker*> stateMonitorTrackerMap;
 
     StateMonitorManager stateMonitorManager;
 };

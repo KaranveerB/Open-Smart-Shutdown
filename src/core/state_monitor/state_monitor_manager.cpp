@@ -12,6 +12,15 @@ State *StateMonitorManager::getState(unsigned int id) const {
     return statesMap.at(id);
 }
 
+void StateMonitorManager::deleteStateMonitor(unsigned int id) {
+    if (started) {
+        statesMap.at(id)->scheduleForDeletion();
+    } else {
+        delete statesMap.at(id);
+        statesMap.erase(id);
+    }
+}
+
 void StateMonitorManager::startMonitor() {
     stateMonitorThread = std::thread(&StateMonitorManager::monitorStates, this);
     stateMonitorThread.detach();
@@ -30,11 +39,16 @@ void StateMonitorManager::monitorStates() {
             scheduledStateReaderQueue.pop();
             auto *sm = scheduledSR.getStateReader();
             unsigned int id = scheduledSR.getId();
-            statesMap[id]->update(sm->getStateActive());
-            statesMap[id]->setStateValueString(sm->getStateValueString());
-            emit stateChanged(id, statesMap.at(id));
-            checkEventTriggerCondition();
-            scheduleStateReader(id, sm); // reschedule state reader
+            if (statesMap[id]->isScheduledForDeletion()) {
+                delete sm;
+                statesMap.erase(id);
+            } else {
+                statesMap[id]->update(sm->getStateActive());
+                statesMap[id]->setStateValueString(sm->getStateValueString());
+                emit stateChanged(id, statesMap.at(id));
+                checkEventTriggerCondition();
+                scheduleStateReader(id, sm); // reschedule state reader
+            }
         } else {
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
