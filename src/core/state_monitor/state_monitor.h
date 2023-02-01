@@ -36,7 +36,7 @@ public:
         }
     };
 
-    ~StateMonitor() {
+    ~StateMonitor() override {
         delete stateReader;
         delete stateEvaluator;
     }
