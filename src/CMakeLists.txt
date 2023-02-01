@@ -27,7 +27,7 @@ set(state_monitor_files
         core/state_monitor/state_monitor.tpp
         core/state_monitor/state_monitor.h
         core/state_monitor/state.cpp
-        core/state_monitor/state.h)
+        core/state_monitor/state.h core/state_monitor/thread_pool.cpp core/state_monitor/thread_pool.h)
 
 set(state_evaluator_files
         core/state_monitor/state_evaluator/state_evaluator.h

@@ -25,6 +25,7 @@ void StateMonitorManager::startMonitor() {
 }
 
 void StateMonitorManager::monitorStates() {
+    ThreadPool pool(5);
     while (started) {
         if (scheduledStateReaderQueue.empty()) {
             std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -34,23 +35,30 @@ void StateMonitorManager::monitorStates() {
         ScheduledStateReader scheduledSR = scheduledStateReaderQueue.top();
         if (scheduledSR.isReady()) {
             scheduledStateReaderQueue.pop();
-            auto *sm = scheduledSR.getStateReader();
-            unsigned int id = scheduledSR.getId();
-            if (statesMap[id]->isScheduledForDeletion()) {
-                delete sm;
-                statesMap.erase(id);
-            } else {
-                statesMap[id]->update(sm->getStateActive());
-                statesMap[id]->setStateValueString(sm->getStateValueString());
-                emit stateChanged(id, statesMap.at(id));
-                checkEventTriggerCondition();
-                scheduleStateReader(id, sm); // reschedule state reader
-            }
+            pool.enqueueTask([this, scheduledSR] {
+                executeStateMonitor(scheduledSR);
+            });
         } else {
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
     }
     // TODO: integrate with Waiting state
+}
+
+void StateMonitorManager::executeStateMonitor(ScheduledStateReader scheduledSR) {
+    auto *sm = scheduledSR.getStateReader();
+    unsigned int id = scheduledSR.getId();
+    if (statesMap[id]->isScheduledForDeletion()) {
+        delete sm;
+        statesMap.erase(id);
+    } else {
+        statesMap[id]->update(sm->getStateActive());
+        statesMap[id]->setStateValueString(sm->getStateValueString());
+        emit stateChanged(id, statesMap.at(id));
+        checkEventTriggerCondition();
+        scheduleStateReader(id, sm); // reschedule state reader
+    }
+
 }
 
 void StateMonitorManager::scheduleStateReader(unsigned int id, IStateMonitor *stateMonitor) {

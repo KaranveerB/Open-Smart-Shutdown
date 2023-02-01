@@ -16,6 +16,7 @@
 #include "state_monitor.h"
 #include "state.h"
 #include "events/event_triggers.h"
+#include "thread_pool.h"
 
 
 class StateMonitorManager : public QObject {
@@ -90,6 +91,8 @@ private:
 
     void monitorStates();
 
+    void executeStateMonitor(ScheduledStateReader scheduledSR);
+
     void checkEventTriggerCondition();
 
     std::priority_queue<ScheduledStateReader, std::vector<ScheduledStateReader>,
@@ -109,6 +112,8 @@ private:
 
     bool readyForEventTrigger = false;
     std::chrono::time_point<std::chrono::steady_clock> eventTriggerTime;
+
+
 
 public slots:
     void deleteStateMonitor(unsigned int id);
