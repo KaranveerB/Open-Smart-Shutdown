@@ -25,7 +25,7 @@ public:
             state = StateStatus::Active;
             bufferCount = baseBufferCount;
         } else if (!isActive && state != StateStatus::Inactive) {
-            if (baseBufferCount > 0) {
+            if (baseBufferCount > 0 && state != StateStatus::Waiting) {
                 state = StateStatus::Buffered;
                 bufferCount--;
                 if (bufferCount == 0) {
