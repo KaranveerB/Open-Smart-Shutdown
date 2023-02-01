@@ -1,6 +1,7 @@
 #pragma once
 
 #include <chrono>
+#include <vector>
 
 #include <QHeaderView>
 #include <QObject>
@@ -38,7 +39,7 @@ signals:
 private:
     int getRow(StateMonitorTracker *caller);
 
-    std::unordered_map<int, StateMonitorTracker*> stateMonitorTrackerMap;
+    std::vector<StateMonitorTracker*> stateMonitorTrackers;
 
     StateMonitorManager stateMonitorManager;
 };

@@ -44,7 +44,7 @@ MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, StateMonitorCreatorWi
     item->setText(3, "Waiting");
 
     addTopLevelItem(item);
-    stateMonitorTrackerMap[indexOfTopLevelItem(item)] = newStateMonitorTracker;
+    stateMonitorTrackers.emplace_back(newStateMonitorTracker);
 
     connect(newStateMonitorTracker, &StateMonitorTracker::stateMonitorTrackerStateChanged, this,
             &MainStateMonitorWidget::updateStateMonitorTrackerState);
@@ -79,29 +79,22 @@ bool MainStateMonitorWidget::toggleStart() {
 }
 
 int MainStateMonitorWidget::getRow(StateMonitorTracker *caller) {
-    for (const auto &[key, value]: stateMonitorTrackerMap) {
-        if (value == caller) {
-            return key;
+    for (unsigned int i = 0; i < stateMonitorTrackers.size(); i++) {
+        if (stateMonitorTrackers.at(i) == caller) {
+            return i;
         }
     }
-    return -1;
+
+    throw std::runtime_error("invalid caller for getRow");
 }
 
 void MainStateMonitorWidget::handleItemClicked(QTreeWidgetItem *item, int column) {
     if (column == 4) { // delete button
         int row = indexOfTopLevelItem(item);
         takeTopLevelItem(row);
-        auto *stateMonitorTracker = stateMonitorTrackerMap.at(row);
-
+        auto *stateMonitorTracker = stateMonitorTrackers.at(row);
         stateMonitorTracker->deleteStateMonitor();
-        stateMonitorTrackerMap.erase(row);
-        for (auto it = stateMonitorTrackerMap.begin(); it != stateMonitorTrackerMap.end(); it++) {
-            if (it->first > row) {
-                auto node = stateMonitorTrackerMap.extract(it->first);
-                node.key() = it->first - 1;
-                stateMonitorTrackerMap.insert(std::move(node));
-            }
-        }
+        stateMonitorTrackers.erase(stateMonitorTrackers.begin() + row);
         delete item;
     }
 }
