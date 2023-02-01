@@ -27,7 +27,9 @@ void StateMonitorManager::startMonitor() {
 void StateMonitorManager::monitorStates() {
     ThreadPool pool(5);
     while (started) {
+        std::unique_lock<std::mutex> lock(queueMutex);
         if (scheduledStateReaderQueue.empty()) {
+            lock.unlock();
             std::this_thread::sleep_for(std::chrono::seconds(1));
             continue;
         }
@@ -35,10 +37,12 @@ void StateMonitorManager::monitorStates() {
         ScheduledStateReader scheduledSR = scheduledStateReaderQueue.top();
         if (scheduledSR.isReady()) {
             scheduledStateReaderQueue.pop();
+            lock.unlock();
             pool.enqueueTask([this, scheduledSR] {
                 executeStateMonitor(scheduledSR);
             });
         } else {
+            lock.unlock();
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
     }
@@ -62,6 +66,7 @@ void StateMonitorManager::executeStateMonitor(ScheduledStateReader scheduledSR) 
 }
 
 void StateMonitorManager::scheduleStateReader(unsigned int id, IStateMonitor *stateMonitor) {
+    std::lock_guard<std::mutex> lock(queueMutex);
     scheduledStateReaderQueue.emplace(id, stateMonitor);
 }
 

@@ -100,6 +100,8 @@ private:
             std::priority_queue<ScheduledStateReader, std::vector<ScheduledStateReader>,
                     ScheduledStateReader::compare>();
 
+    std::mutex queueMutex;
+
     std::thread stateMonitorThread;
 
     std::unordered_map<unsigned int, State *> statesMap;
