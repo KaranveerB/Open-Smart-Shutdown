@@ -195,6 +195,7 @@ StateEvaluator<T> *StateMonitorCreatorWidget::createStateEvaluator(T data1, T da
         case Equal:
             return new EqualStateEvaluator<T>(data1);
     }
+    throw std::runtime_error("could not create state evaluator");
 }
 
 
@@ -240,6 +241,8 @@ IStateMonitor *StateMonitorCreatorWidget::getStateMonitor() const {
             return new StateMonitor<T>(stateReader, stateEvaluator, pollingInterval);
         }
     }
+
+    throw std::runtime_error("could not create state monitor");
 }
 
 
