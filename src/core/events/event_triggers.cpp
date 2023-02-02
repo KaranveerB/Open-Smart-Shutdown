@@ -43,7 +43,9 @@ void EventTriggers::showNotification() {
     trayIcon.setObjectName("Name");
     trayIcon.setIcon(icon);
     trayIcon.show();
-    trayIcon.showMessage("yo", "ay", QSystemTrayIcon::Information, 10000);
+    trayIcon.showMessage("Open Smart Shutdown Triggered", "The conditions set have been met and "
+                                                          "Open Smart Shutdown has triggered.",
+                         QSystemTrayIcon::Information, 10000);
     trayIcon.deleteLater();
 }
 
