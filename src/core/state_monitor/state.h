@@ -11,7 +11,8 @@ public:
         Inactive,
         Active,
         Buffered,
-        Waiting
+        Waiting,
+        Error
     } StateStatus;
 
     State(unsigned int baseBufferCount = 3) : baseBufferCount(baseBufferCount), bufferCount(baseBufferCount) {}
@@ -25,7 +26,7 @@ public:
             state = StateStatus::Active;
             bufferCount = baseBufferCount;
         } else if (!isActive && state != StateStatus::Inactive) {
-            if (baseBufferCount > 0 && state != StateStatus::Waiting) {
+            if (baseBufferCount > 0 && state != StateStatus::Waiting && state != StateStatus::Error) {
                 state = StateStatus::Buffered;
                 bufferCount--;
                 if (bufferCount == 0) {
@@ -55,6 +56,10 @@ public:
 
     bool isScheduledForDeletion() {
         return scheduledForDeletion;
+    }
+
+    void setError() {
+        state = Error;
     }
 
 private:

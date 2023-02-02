@@ -28,6 +28,9 @@ void StateMonitorTracker::updateState(State &state) {
         case State::Waiting:
             newStateQString = "Waiting";
             break;
+        case State::Error:
+            newStateQString = "Error";
+            break;
     }
 
     QString newStateValueQString = QString::fromStdString(state.getStateValueString());

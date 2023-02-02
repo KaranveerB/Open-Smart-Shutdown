@@ -56,8 +56,15 @@ void StateMonitorManager::executeStateMonitor(ScheduledStateReader scheduledSR) 
         delete sm;
         statesMap.erase(id);
     } else {
-        statesMap[id]->update(sm->getStateActive());
-        statesMap[id]->setStateValueString(sm->getStateValueString());
+        try {
+            statesMap[id]->update(sm->getStateActive());
+            statesMap[id]->setStateValueString(sm->getStateValueString());
+        } catch (std::exception &exception) {
+            statesMap[id]->setError();
+            std::string errorMsg = "Internal Error: ";
+            errorMsg += exception.what();
+            statesMap[id]->setStateValueString(errorMsg);
+        }
         emit stateChanged(id, statesMap.at(id));
         checkEventTriggerCondition();
         scheduleStateReader(id, sm); // reschedule state reader
