@@ -10,6 +10,6 @@ std::string StateMonitor<T>::getStateValueString() const {
 }
 
 template<class T>
-std::chrono::duration<int64_t> StateMonitor<T>::getPollingInterval() const {
+std::chrono::duration<int64_t, std::milli> StateMonitor<T>::getPollingInterval() const {
     return pollingInterval;
 };

@@ -54,6 +54,25 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
     readerDataInput = new QLineEdit("State reader data input", mainWidget);
     mainWidgetLayout->addWidget(readerDataInput);
 
+    auto *bufferSizeLabel = new QLabel("Buffer Size:");
+    bufferSizeSpinBox = new QSpinBox;
+    bufferSizeSpinBox->setMinimum(0);
+    bufferSizeSpinBox->setMaximum(INT_MAX);
+    bufferSizeSpinBox->setSingleStep(1);
+    bufferSizeSpinBox->setValue(3);
+
+    auto *pollingIntervalLabel = new QLabel("Polling Rate (ms):");
+    pollingIntervalSpinBox = new QSpinBox;
+    pollingIntervalSpinBox->setMinimum(0);
+    pollingIntervalSpinBox->setMaximum(INT_MAX);
+    pollingIntervalSpinBox->setSingleStep(100);
+    pollingIntervalSpinBox->setValue(1000);
+
+    mainWidgetLayout->addWidget(bufferSizeLabel);
+    mainWidgetLayout->addWidget(bufferSizeSpinBox);
+    mainWidgetLayout->addWidget(pollingIntervalLabel);
+    mainWidgetLayout->addWidget(pollingIntervalSpinBox);
+
     auto *evaluatorTypeSelector = new QComboBox(mainWidget);
     evaluatorTypeSelector->addItem("Between", QVariant(StateEvaluatorType::InRange));
     evaluatorTypeSelector->addItem("Equal", QVariant(StateEvaluatorType::Equal));
@@ -101,7 +120,7 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
     completeButtonLayout->addWidget(cancelButton);
 
     // TODO: Don't manually set this
-    setMinimumSize(350, 300);
+    setMinimumSize(350, 350);
 }
 
 template<class T>
@@ -180,44 +199,45 @@ StateEvaluator<T> *StateMonitorCreatorWidget::createStateEvaluator(T data1, T da
 
 
 IStateMonitor *StateMonitorCreatorWidget::getStateMonitor() const {
+    auto pollingInterval = std::chrono::milliseconds(pollingIntervalSpinBox->value());
     switch (currentStateReaderType) {
         case Time: {
             typedef QTime T;
             auto *stateReader = new TimeStateReader();
             auto *stateEvaluator = createStateEvaluator<T>();
-            return new StateMonitor<T>(stateReader, stateEvaluator);
+            return new StateMonitor<T>(stateReader, stateEvaluator, pollingInterval);
         }
         case Cpu: {
             typedef float T;
             auto *stateReader = new CpuStateReader();
             auto *stateEvaluator = createStateEvaluator<T>();
-            return new StateMonitor<T>(stateReader, stateEvaluator);
+            return new StateMonitor<T>(stateReader, stateEvaluator, pollingInterval);
         }
         case Disk: {
             typedef float T;
             auto *stateReader = new DiskStateReader("_Total"); // TODO: Allow selecting disk
             auto *stateEvaluator = createStateEvaluator<T>();
-            return new StateMonitor<T>(stateReader, stateEvaluator);
+            return new StateMonitor<T>(stateReader, stateEvaluator, pollingInterval);
         }
         case Network: {
             typedef float T;
             auto *stateReader = new NetStateReader();
             auto *stateEvaluator = createStateEvaluator<T>();
-            return new StateMonitor<T>(stateReader, stateEvaluator);
+            return new StateMonitor<T>(stateReader, stateEvaluator, pollingInterval);
         }
         case StrShell: {
             typedef std::string T;
             std::string readerData = readerDataInput->text().toStdString();
             auto *stateReader = new StringShellStateReader(readerData);
             auto *stateEvaluator = createStateEvaluator<T>();
-            return new StateMonitor<T>(stateReader, stateEvaluator);
+            return new StateMonitor<T>(stateReader, stateEvaluator, pollingInterval);
         }
         case FloatShell: {
             typedef float T;
             std::string readerData = readerDataInput->text().toStdString();
             auto *stateReader = new FloatShellStateReader(readerData);
             auto *stateEvaluator = createStateEvaluator<T>();
-            return new StateMonitor<T>(stateReader, stateEvaluator);
+            return new StateMonitor<T>(stateReader, stateEvaluator, pollingInterval);
         }
     }
 }
@@ -232,6 +252,7 @@ QTime StateMonitorCreatorWidget::truncateQTimeToMinutes(QTime time) {
 StateMonitorCreatorWidget::StateMonitorMetaInfo StateMonitorCreatorWidget::getStateMonitorMetaInfo() const {
     StateMonitorMetaInfo metaInfo;
     metaInfo.name = nameLineEdit->text();
+    metaInfo.bufferSize = (unsigned int) bufferSizeSpinBox->value();
     // TODO: Use map (or better solution) and move this somewhere else
     switch (currentStateReaderType) {
         case Time:

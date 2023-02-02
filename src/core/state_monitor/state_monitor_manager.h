@@ -63,6 +63,8 @@ public:
 
     [[nodiscard]] unsigned int addStateMonitor(IStateMonitor *stateMonitor);
 
+    [[nodiscard]] unsigned int addStateMonitor(IStateMonitor *stateMonitor, unsigned int stateBufferSize);
+
     State *getState(unsigned int id) const;
 
     Configuration getConfig() {
@@ -127,4 +129,5 @@ signals:
     void monitoredStatesChanged() const;
 
     void timeTillEventTriggerChanged(QTime timeRemaining) const;
+
 };

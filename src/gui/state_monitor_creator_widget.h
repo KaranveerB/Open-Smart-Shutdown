@@ -8,6 +8,7 @@
 #include <QTimeEdit>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QLabel>
 #include <QLineEdit>
 
 #include "state_monitor/state_monitor.h"
@@ -21,6 +22,7 @@ public:
     struct StateMonitorMetaInfo {
         QString name;
         QString typeName;
+        unsigned int bufferSize;
     };
 
     explicit StateMonitorCreatorWidget(QWidget *parent = nullptr);
@@ -60,7 +62,9 @@ private:
     QWidget *mainWidget;
     QVBoxLayout *mainWidgetLayout;
     QLineEdit *nameLineEdit;
-    QLineEdit *readerDataInput = nullptr;
+    QLineEdit *readerDataInput= nullptr;
+    QSpinBox *bufferSizeSpinBox;
+    QSpinBox *pollingIntervalSpinBox;
     QHBoxLayout *evaluatorDataInputLayout;
     QWidget *evaluatorDataInputWidget = nullptr;
     QWidget *evaluatorDataInput1 = nullptr;

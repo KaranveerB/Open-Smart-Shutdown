@@ -14,7 +14,7 @@ public:
     // returns string representation of state value used when getStateActive() was last called
     virtual std::string getStateValueString() const = 0;
 
-    virtual std::chrono::duration<int64_t> getPollingInterval() const = 0;
+    virtual std::chrono::duration<int64_t, std::milli> getPollingInterval() const = 0;
 };
 
 template<class T>
@@ -28,7 +28,7 @@ public:
     };
 
     StateMonitor(StateReader<T> *stateReader, StateEvaluator<T> *stateEvaluator,
-                 std::chrono::duration<int64_t> pollingInterval) : stateReader{stateReader},
+                 std::chrono::duration<int64_t, std::milli> pollingInterval) : stateReader{stateReader},
                                                                    stateEvaluator{stateEvaluator},
                                                                    pollingInterval{pollingInterval} {
         if (stateReader == nullptr || stateEvaluator == nullptr) {
@@ -45,13 +45,13 @@ public:
 
     std::string getStateValueString() const override;
 
-    std::chrono::duration<int64_t> getPollingInterval() const override;
+    std::chrono::duration<int64_t, std::milli> getPollingInterval() const override;
 
 private:
     StateReader<T> *stateReader;
     StateEvaluator<T> *stateEvaluator;
     T prevStateValue;
-    std::chrono::duration<int64_t> pollingInterval = std::chrono::seconds(1);
+    std::chrono::duration<int64_t, std::milli> pollingInterval = std::chrono::milliseconds (1000);
 };
 
 #include "state_monitor.tpp"

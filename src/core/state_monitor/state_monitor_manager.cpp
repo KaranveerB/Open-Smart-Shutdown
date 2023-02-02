@@ -8,6 +8,14 @@ unsigned int StateMonitorManager::addStateMonitor(IStateMonitor *stateMonitor) {
     return id;
 }
 
+unsigned int StateMonitorManager::addStateMonitor(IStateMonitor *stateMonitor, unsigned int stateBufferSize) {
+    unsigned int id = nextId++;
+    statesMap[id] = new State(stateBufferSize);
+    scheduleStateReader(id, stateMonitor);
+    emit monitoredStatesChanged();
+    return id;
+}
+
 State *StateMonitorManager::getState(unsigned int id) const {
     return statesMap.at(id);
 }

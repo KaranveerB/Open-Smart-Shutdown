@@ -1,4 +1,6 @@
-# Open Smart Shutdown (WIP)
+# Open Smart Shutdown
+See [current state](#current-state) before using.
+
 A QT based cross-platform open source tool to automate conditional shutdowns, similar to [AMP WinOFF](http://www.ampsoft.net/utilities/WinOFF.php).
 
 This can help in various cases such as 
@@ -31,3 +33,11 @@ The program should let you use its flexibility to the fullest without fighting y
 This is a tool that should work for you so you shouldn't have to work for the tool.
 
 You should also be able to load profiles you previously made to easily repeat previous Open Smart Shutdown tasks.
+
+# Current state
+The project while not overly ambitious in my opinion, is too large of a time commitment to continue working on.
+The project is usable with several major drawbacks. If anyone wants to use this and is affected by any of these
+issues, create an issue and I may deal with them
+
+**Issues**
+- Using shell state monitors spawns a new shell every time

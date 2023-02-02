@@ -16,7 +16,7 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(pa
     header->setSectionResizeMode(1, QHeaderView::Stretch);
     header->setSectionResizeMode(2, QHeaderView::Stretch);
     header->resizeSection(2, fm.horizontalAdvance("99:99:99  "));
-    header->resizeSection(3, fm.horizontalAdvance("Buffer (99)  "));
+    header->resizeSection(3, fm.horizontalAdvance("Buffer (999)  "));
     header->resizeSection(4, 24);
     header->setSectionResizeMode(4, QHeaderView::Fixed);
     header->setStretchLastSection(false);
@@ -34,7 +34,7 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(pa
 
 void
 MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, StateMonitorCreatorWidget::StateMonitorMetaInfo metaInfo) {
-    unsigned int id = stateMonitorManager.addStateMonitor(sm);
+    unsigned int id = stateMonitorManager.addStateMonitor(sm, metaInfo.bufferSize);
     auto *newStateMonitorTracker = new StateMonitorTracker(id, stateMonitorManager, this);
 
     auto *item = new QTreeWidgetItem; // TODO: Customize this
