@@ -19,14 +19,6 @@ public:
         sysMon = new WinSystemMonitor();
 #endif
         // TODO: do other OSes
-
-        // test if driveName is valid
-        try {
-            sysMon->getDiskUsage(driveName);
-        } catch (std::exception &e) {
-            throw std::exception("invalid driveName");
-        }
-        this->driveName = driveName;
     }
 
     float getStateValue() const override {

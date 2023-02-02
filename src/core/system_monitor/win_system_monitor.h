@@ -12,7 +12,7 @@ class WinSystemMonitor : public SystemMonitor {
 public:
     float getCpuUsage() override;
     float getDiskUsage(std::string diskName) override;
-    float getNetUpAmount() override; // TODO: implement
-    float getNetDownAmount() override; // TODO: implement
+    float getNetUpAmount() override;
+    float getNetDownAmount() override;
     float getNetCombinedAmount() override;
 };
