@@ -7,7 +7,6 @@
 
 #include "state_reader.h"
 
-// TODO: This (and likley float shell) return state value output
 class StringShellStateReader : public StateReader<std::string> {
 public:
     explicit StringShellStateReader(std::string shellCommand) : shellCommand(std::move(shellCommand)) {}
