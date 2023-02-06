@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.23)
 project(open_smart_shutdown)
 
-set(QT6_INSTALL_PATH D:/pkg/Qt/6.3.1/msvc2019_64) # Ignore this if CMake can find Qt6 normally
-# note that this is my personal path to Qt6 and it is likely different on your system
+# Personal Qt6 path. Likely different on other systems. Safe to ignore if CMake can find Qt6 normally
+set(QT6_INSTALL_PATH D:/pkg/Qt/6.3.1/msvc2019_64)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON)
@@ -21,65 +21,31 @@ find_package(Qt6 COMPONENTS
 
 add_subdirectory(wmi)
 
-set(state_monitor_files
-        core/state_monitor/state_monitor_manager.cpp
-        core/state_monitor/state_monitor_manager.h
-        core/state_monitor/state_monitor.tpp
-        core/state_monitor/state_monitor.h
-        core/state_monitor/state.cpp
-        core/state_monitor/state.h core/state_monitor/thread_pool.cpp core/state_monitor/thread_pool.h)
-
-set(state_evaluator_files
-        core/state_monitor/state_evaluator/state_evaluator.h
-        core/state_monitor/state_evaluator/state_evaluator_master.h
-        core/state_monitor/state_evaluator/in_range_state_evaluator.h
-        core/state_monitor/state_evaluator/greater_than_state_evaluator.h)
-
-set(state_reader_files
-        core/state_monitor/state_reader/state_reader.h
-        core/state_monitor/state_reader/state_reader_master.h
-        core/state_monitor/state_reader/time_state_reader.h
-        core/state_monitor/state_reader/cpu_state_reader.h
-        core/state_monitor/state_reader/disk_state_reader.h
-        core/state_monitor/state_reader/net_state_reader.h)
-
-set(system_monitor_files
-        core/system_monitor/system_monitor.h
-        core/system_monitor/win_system_monitor.h
-        core/system_monitor/win_system_monitor.cpp)
-
-set(triggered_executions_files
-        core/events/event_triggers.cpp
-        core/events/event_triggers.h)
-
-set(gui_files
-        main.cpp
-        gui/icons.qrc
-        gui/main_window.cpp
-        gui/main_window.h
-        gui/main_state_monitor_widget.cpp
-        gui/main_state_monitor_widget.h
-        gui/state_monitor_tracker.cpp
-        gui/state_monitor_tracker.h
-        gui/state_monitor_creator_widget.cpp
-        gui/state_monitor_creator_widget.h
-        gui/state_monitor_widget_delegate.cpp
-        gui/state_monitor_widget_delegate.h
-        gui/configure_widget.cpp
-        gui/configure_widget.h)
-
-set(gui_resource_files
-        gui/icons.qrc)
-
-set(wmi_files
-        wmi/include/unistd.h
-        wmi/include/wmi.hpp
-        wmi/include/wmiclasses.hpp
-        wmi/include/wmiexception.hpp
-        wmi/include/wmiresult.hpp
-        wmi-extended/wmiclassesextended.hpp)
+file(GLOB state_monitor_files
+        core/state_monitor/*.h
+        core/state_monitor/*.cpp)
+file(GLOB state_evaluator_files
+        core/state_monitor/state_evaluator/*.h)
+file(GLOB state_reader_files
+        core/state_monitor/state_reader/*.h)
+file(GLOB system_monitor_files
+        core/system_monitor/*.h
+        core/system_monitor/*.cpp)
+file(GLOB triggered_executions_files
+        core/events/*.h
+        core/events/*.cpp)
+file(GLOB gui_files
+        gui/*.h
+        gui/*.cpp
+        gui/*.qrc)
+if (WIN32)
+file(GLOB wmi_files
+        wmi/include/*.hpp
+        wmi-extended/*.hpp)
+endif()
 
 add_executable(open_smart_shutdown
+        main.cpp
         ${state_monitor_files}
         ${state_evaluator_files}
         ${state_reader_files}
