@@ -101,7 +101,7 @@ if (WIN32)
     set_target_properties(open_smart_shutdown PROPERTIES WIN32_EXECUTABLE TRUE)
 endif()
 
-set_target_properties(open_smart_shutdown PROPERTIES OUTPUT_NAME "")
+set_target_properties(open_smart_shutdown PROPERTIES OUTPUT_NAME "OpenSmartShutdown")
 
 if (WIN32)
     set(DEBUG_SUFFIX)
