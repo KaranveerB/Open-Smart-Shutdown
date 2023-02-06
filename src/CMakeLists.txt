@@ -93,11 +93,10 @@ target_link_libraries(open_smart_shutdown
         Qt::Core
         Qt::Gui
         Qt::Widgets
-        Qt::Svg
-        wmi)
+        Qt::Svg)
 
 if (WIN32)
-    target_link_libraries(open_smart_shutdown powrprof)
+    target_link_libraries(open_smart_shutdown powrprof wmi)
     add_executable(GuiApplication WIN32 main.cpp)
     set_target_properties(open_smart_shutdown PROPERTIES WIN32_EXECUTABLE TRUE)
 endif()
