@@ -1,12 +1,9 @@
 #pragma once
 
-#include <QHBoxLayout>
-#include <QLabel>
-#include <QWidget>
-#include <QItemDelegate>
+#include <QString>
 
-#include "state_monitor/state_monitor_manager.h"
 #include "state_monitor/state.h"
+#include "state_monitor/state_monitor_manager.h"
 
 class StateMonitorTracker : public QObject {
 Q_OBJECT
@@ -16,7 +13,12 @@ public:
 
     void updateState(State &state);
 
-    void deleteStateMonitor();
+    /*
+     * Deletion of the state monitor itself is scheduled rather than done immediately. The StateMonitorTracker is
+     * deleted immediately. Regardless, after this function returns, it should be treated as if everything is deleted
+     * once the function returns as StateMonitorManager handles the rest of the deletion process.
+     */
+    void deleteStateMonitorTracker();
 
 private:
     unsigned int id;
@@ -36,6 +38,10 @@ signals:
 
     void stateMonitorTrackerStateValueChanged(QString stateValue);
 
+    /*
+     * See comment on deleteStateMonitorTracker for more information. StateMonitorManager should react to this signal
+     * to schedule deletion of the underlying StateMonitor instance.
+     */
     void scheduleStateMonitorDeletion(unsigned int id);
 
 };

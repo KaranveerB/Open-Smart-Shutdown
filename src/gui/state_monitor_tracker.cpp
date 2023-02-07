@@ -3,9 +3,6 @@
 StateMonitorTracker::StateMonitorTracker(unsigned int id, const StateMonitorManager &stateMonitorManager,
                                          QObject *parent) : QObject(parent), id{id} {
 
-    // Clion error for connect: "constexpr variable 'begin' must be initialized by a
-    // constant expression" can be safely ignored here (likely bug in clion).
-    // Error isn't present with SIGNAL() SLOT(), but using current approach leads to compile-time type-checking
     QObject::connect(&stateMonitorManager, &StateMonitorManager::stateChanged,
                      this, &StateMonitorTracker::updateStateMonitorTracker);
 }
@@ -35,6 +32,7 @@ void StateMonitorTracker::updateState(State &state) {
 
     QString newStateValueQString = QString::fromStdString(state.getStateValueString());
 
+    // only signal update if there is a change
     if (newStateQString != stateQString) {
         stateQString = newStateQString;
         emit stateMonitorTrackerStateChanged(stateQString);
@@ -49,12 +47,13 @@ void StateMonitorTracker::updateState(State &state) {
 
 }
 
-void StateMonitorTracker::deleteStateMonitor() {
+void StateMonitorTracker::deleteStateMonitorTracker() {
     emit scheduleStateMonitorDeletion(id);
     delete this;
 }
 
 void StateMonitorTracker::updateStateMonitorTracker(unsigned int id, State *state) {
+    // All StateMonitorTrackers react to this, but it should only be acted upon if the id matches the instance's id.
     if (this->id == id) {
         updateState(*state);
     }
