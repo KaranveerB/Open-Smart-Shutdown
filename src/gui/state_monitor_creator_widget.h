@@ -66,10 +66,16 @@ private:
     StateEvaluatorType currentStateEvaluatorType;
 
     QVBoxLayout *mainLayout;
+
+    // general config area
     QLineEdit *nameLineEdit;
-    QLineEdit *readerDataInput;
     QSpinBox *bufferSizeSpinBox;
     QSpinBox *pollingIntervalSpinBox;
+
+    // reader config area
+    QLineEdit *readerDataInput;
+
+    // evaluator config area
     QHBoxLayout *evaluatorDataInputLayout;
     QWidget *evaluatorDataInput1;
     QWidget *evaluatorDataInput2;
