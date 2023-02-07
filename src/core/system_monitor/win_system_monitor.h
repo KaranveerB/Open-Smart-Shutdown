@@ -11,8 +11,14 @@
 class WinSystemMonitor : public SystemMonitor {
 public:
     float getCpuUsage() override;
+
+    // we use diskName here instead of disk as that's how it's defined on windows
+    // driveLabel == diskName in this case
     float getDiskUsage(std::string diskName) override;
-    float getNetUpAmount() override;
-    float getNetDownAmount() override;
+
+    float getNetUpAmount() override; // TODO: implemented
+
+    float getNetDownAmount() override; // TODO: implemented
+
     float getNetCombinedAmount() override;
 };
