@@ -2,14 +2,18 @@
 
 #include <chrono>
 
-#include <QComboBox>
 #include <QDialog>
+
+#include <QComboBox>
 #include <QDoubleSpinBox>
-#include <QTimeEdit>
-#include <QHBoxLayout>
-#include <QPushButton>
+#include <QFrame>
 #include <QLabel>
 #include <QLineEdit>
+#include <QPushButton>
+#include <QTimeEdit>
+
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 
 #include "state_monitor/state_monitor.h"
 #include "state_monitor/state_evaluator/state_evaluator_master.h"
@@ -33,11 +37,12 @@ public:
 
 private slots:
 
-    void updateReaderDataInputWidget(StateReaderType stateReaderType);
+    void updateDataInputs(StateReaderType newStateReaderType);
 
-    void updateEvaluatorDataInputWidget(StateEvaluatorType stateEvaluatorType);
+    void updateDataInputs(StateEvaluatorType newStateEvaluatorType);
 
 private:
+    void addDivider();
 
     template<class T>
     StateEvaluator<T> *createStateEvaluator() const;
@@ -54,19 +59,18 @@ private:
     template<class T>
     StateEvaluator<T> *createStateEvaluator(T min, T max) const;
 
+    // Helpful when restricting QTimeEdit to minutes and not avoiding invisible seconds and millisecond values.
     static QTime truncateQTimeToMinutes(QTime time);
 
     StateReaderType currentStateReaderType;
     StateEvaluatorType currentStateEvaluatorType;
 
-    QWidget *mainWidget;
-    QVBoxLayout *mainWidgetLayout;
+    QVBoxLayout *mainLayout;
     QLineEdit *nameLineEdit;
-    QLineEdit *readerDataInput= nullptr;
+    QLineEdit *readerDataInput;
     QSpinBox *bufferSizeSpinBox;
     QSpinBox *pollingIntervalSpinBox;
     QHBoxLayout *evaluatorDataInputLayout;
-    QWidget *evaluatorDataInputWidget = nullptr;
-    QWidget *evaluatorDataInput1 = nullptr;
-    QWidget *evaluatorDataInput2 = nullptr;
+    QWidget *evaluatorDataInput1;
+    QWidget *evaluatorDataInput2;
 };

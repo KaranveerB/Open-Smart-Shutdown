@@ -3,14 +3,18 @@
 /*
  * -----------------------------
  * | [state monitor name]      |
+ * | Buffer Sizes:             |
+ * | [buffer size           ]  | <-- general config area
+ * | Polling Rate (ms):        |
+ * | [polling rate]            |
  * |---------------------------|
- * | [sel reader type]         |
+ * | [sel reader type]         | <-- StateReader config area
  * | [data for reader       ]  |
  * | ------------------------- |
- * | [sel eval type]           |
+ * | [sel eval type]           | <-- StateEvaluator config area
  * | [data for eval         ]  |
  * | ------------------------- |
- * |        [confirm] [cancel] |
+ * |        [confirm] [cancel] | <-- state monitor creator button area
  * -----------------------------
  */
 
@@ -28,52 +32,64 @@ using std::chrono::system_clock;
 
 StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(parent) {
     setWindowTitle("Create new state monitor");
+    setMinimumSize(350, 350); // TODO: Don't manually set this
 
-    mainWidget = new QWidget(this);
-    mainWidgetLayout = new QVBoxLayout(mainWidget);
+    mainLayout = new QVBoxLayout(this);
 
-    nameLineEdit = new QLineEdit("State monitor name", mainWidget);
-    mainWidgetLayout->addWidget(nameLineEdit);
-
-    auto *readerTypeSelector = new QComboBox(mainWidget);
-    readerTypeSelector->addItem("Time", QVariant(StateReaderType::Time));
-    readerTypeSelector->addItem("Network usage", QVariant(StateReaderType::Network));
-    readerTypeSelector->addItem("Disk usage", QVariant(StateReaderType::Disk));
-    readerTypeSelector->addItem("CPU usage", QVariant(StateReaderType::Cpu));
-    readerTypeSelector->addItem("Shell command (String output)", QVariant(StateReaderType::StrShell));
-    readerTypeSelector->addItem("Shell command (Int/Float output)", QVariant(StateReaderType::FloatShell));
-    mainWidgetLayout->addWidget(readerTypeSelector);
-
-    QObject::connect(readerTypeSelector, &QComboBox::currentIndexChanged,
-                     [this, readerTypeSelector]() {
-                         auto type = readerTypeSelector->currentData().value<StateReaderType>();
-                         updateReaderDataInputWidget(type);
-                     });
-
-
-    readerDataInput = new QLineEdit("State reader data input", mainWidget);
-    mainWidgetLayout->addWidget(readerDataInput);
+    // general config area
+    nameLineEdit = new QLineEdit("State monitor name", this);
+    mainLayout->addWidget(nameLineEdit);
 
     auto *bufferSizeLabel = new QLabel("Buffer Size:");
+
     bufferSizeSpinBox = new QSpinBox;
     bufferSizeSpinBox->setMinimum(0);
     bufferSizeSpinBox->setMaximum(INT_MAX);
     bufferSizeSpinBox->setSingleStep(1);
     bufferSizeSpinBox->setValue(3);
 
+    mainLayout->addWidget(bufferSizeLabel);
+    mainLayout->addWidget(bufferSizeSpinBox);
+
     auto *pollingIntervalLabel = new QLabel("Polling Rate (ms):");
+
     pollingIntervalSpinBox = new QSpinBox;
     pollingIntervalSpinBox->setMinimum(0);
     pollingIntervalSpinBox->setMaximum(INT_MAX);
     pollingIntervalSpinBox->setSingleStep(100);
     pollingIntervalSpinBox->setValue(1000);
 
-    mainWidgetLayout->addWidget(bufferSizeLabel);
-    mainWidgetLayout->addWidget(bufferSizeSpinBox);
-    mainWidgetLayout->addWidget(pollingIntervalLabel);
-    mainWidgetLayout->addWidget(pollingIntervalSpinBox);
+    mainLayout->addWidget(pollingIntervalLabel);
+    mainLayout->addWidget(pollingIntervalSpinBox);
 
-    auto *evaluatorTypeSelector = new QComboBox(mainWidget);
+    // divider
+    addDivider();
+
+    // StateReader config area
+    auto *readerTypeSelector = new QComboBox(this);
+    readerTypeSelector->addItem("Time", QVariant(StateReaderType::Time));
+    readerTypeSelector->addItem("Network usage", QVariant(StateReaderType::Network));
+    readerTypeSelector->addItem("Disk usage", QVariant(StateReaderType::Disk));
+    readerTypeSelector->addItem("CPU usage", QVariant(StateReaderType::Cpu));
+    readerTypeSelector->addItem("Shell command (String output)", QVariant(StateReaderType::StrShell));
+    readerTypeSelector->addItem("Shell command (Int/Float output)", QVariant(StateReaderType::FloatShell));
+    mainLayout->addWidget(readerTypeSelector);
+
+    QObject::connect(readerTypeSelector, &QComboBox::currentIndexChanged,
+                     [this, readerTypeSelector]() {
+                         auto type = readerTypeSelector->currentData().value<StateReaderType>();
+                         updateDataInputs(type);
+                     });
+
+
+    readerDataInput = new QLineEdit("State reader data input", this);
+    mainLayout->addWidget(readerDataInput);
+
+    // divider
+    addDivider();
+
+    // StateEvaluator config area
+    auto *evaluatorTypeSelector = new QComboBox(this);
     evaluatorTypeSelector->addItem("Between", QVariant(StateEvaluatorType::InRange));
     evaluatorTypeSelector->addItem("Equal", QVariant(StateEvaluatorType::Equal));
     evaluatorTypeSelector->addItem("Greater than", QVariant(StateEvaluatorType::Greater));
@@ -81,21 +97,19 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
     evaluatorTypeSelector->addItem("Less than", QVariant(StateEvaluatorType::Less));
     evaluatorTypeSelector->addItem("Less than or equal", QVariant(StateEvaluatorType::LessOrEqual));
 
-    mainWidgetLayout->addWidget(evaluatorTypeSelector);
+    mainLayout->addWidget(evaluatorTypeSelector);
 
     QObject::connect(evaluatorTypeSelector, &QComboBox::currentIndexChanged,
                      [this, evaluatorTypeSelector]() {
                          auto type = evaluatorTypeSelector->currentData().value<StateEvaluatorType>();
-                         updateEvaluatorDataInputWidget(type);
+                         updateDataInputs(type);
                      });
 
-    evaluatorDataInputWidget = new QWidget(mainWidget);
-    evaluatorDataInputLayout = new QHBoxLayout(evaluatorDataInputWidget);
-    evaluatorDataInputWidget->setLayout(evaluatorDataInputLayout);
-    mainWidgetLayout->addWidget(evaluatorDataInputWidget);
+    evaluatorDataInputLayout = new QHBoxLayout();
+    mainLayout->addLayout(evaluatorDataInputLayout);
 
-    evaluatorDataInput1 = new QTimeEdit(evaluatorDataInputWidget);
-    evaluatorDataInput2 = new QTimeEdit(evaluatorDataInputWidget);
+    evaluatorDataInput1 = new QTimeEdit(this);
+    evaluatorDataInput2 = new QTimeEdit(this);
 
     ((QTimeEdit *) evaluatorDataInput1)->setTime(truncateQTimeToMinutes(QTime::currentTime()));
     ((QTimeEdit *) evaluatorDataInput2)->setTime(truncateQTimeToMinutes(QTime::currentTime()));
@@ -104,23 +118,29 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
     evaluatorDataInputLayout->addWidget(evaluatorDataInput2);
 
     currentStateEvaluatorType = evaluatorTypeSelector->currentData().value<StateEvaluatorType>();
-    updateReaderDataInputWidget(readerTypeSelector->currentData().value<StateReaderType>());
+    updateDataInputs(readerTypeSelector->currentData().value<StateReaderType>());
 
-    auto *completeButtonsWidget = new QWidget(mainWidget);
-    auto *completeButtonLayout = new QHBoxLayout(completeButtonsWidget);
-    completeButtonLayout->setAlignment(Qt::AlignRight);
-    mainWidgetLayout->addWidget(completeButtonsWidget);
 
-    auto *addButton = new QPushButton("Add state monitor", completeButtonsWidget);
+    // state monitor (sm) creator button area
+    // no divider because this area only contains buttons
+    auto *smCreatorButtonLayout = new QHBoxLayout();
+    smCreatorButtonLayout->setAlignment(Qt::AlignRight);
+    mainLayout->addLayout(smCreatorButtonLayout);
+
+    auto *addButton = new QPushButton("Add state monitor", this);
     QObject::connect(addButton, &QPushButton::pressed, this, &QDialog::accept);
-    auto *cancelButton = new QPushButton("Cancel", completeButtonsWidget);
+    auto *cancelButton = new QPushButton("Cancel", this);
     QObject::connect(cancelButton, &QPushButton::pressed, this, &QDialog::reject);
 
-    completeButtonLayout->addWidget(addButton);
-    completeButtonLayout->addWidget(cancelButton);
+    smCreatorButtonLayout->addWidget(addButton);
+    smCreatorButtonLayout->addWidget(cancelButton);
+}
 
-    // TODO: Don't manually set this
-    setMinimumSize(350, 350);
+void StateMonitorCreatorWidget::addDivider() {
+    auto *divider = new QFrame();
+    divider->setFrameShape(QFrame::HLine);
+    divider->setFrameShadow(QFrame::Sunken);
+    mainLayout->addWidget(divider);
 }
 
 template<class T>
@@ -280,19 +300,21 @@ StateMonitorCreatorWidget::StateMonitorMetaInfo StateMonitorCreatorWidget::getSt
     return metaInfo;
 }
 
-void StateMonitorCreatorWidget::updateReaderDataInputWidget(StateReaderType stateReaderType) {
-    readerDataInput->setEnabled(stateReaderType == StateReaderType::FloatShell ||
-                                stateReaderType == StateReaderType::StrShell); // currently, only relevant for shell
+void StateMonitorCreatorWidget::updateDataInputs(StateReaderType newStateReaderType) {
+    // reader data input is currently only used for shell
+    readerDataInput->setEnabled(newStateReaderType == StateReaderType::FloatShell ||
+                                newStateReaderType == StateReaderType::StrShell);
+    // TODO: Also use reader data input for disk selection
 
-    currentStateReaderType = stateReaderType;
+    currentStateReaderType = newStateReaderType;
 
     delete evaluatorDataInput1;
     delete evaluatorDataInput2;
 
-    switch (stateReaderType) {
+    switch (newStateReaderType) {
         case Time: {
-            evaluatorDataInput1 = new QTimeEdit(evaluatorDataInputWidget);
-            evaluatorDataInput2 = new QTimeEdit(evaluatorDataInputWidget);
+            evaluatorDataInput1 = new QTimeEdit(this);
+            evaluatorDataInput2 = new QTimeEdit(this);
 
             ((QTimeEdit *) evaluatorDataInput1)->setTime(truncateQTimeToMinutes(QTime::currentTime()));
             ((QTimeEdit *) evaluatorDataInput2)->setTime(truncateQTimeToMinutes(QTime::currentTime()));
@@ -302,14 +324,14 @@ void StateMonitorCreatorWidget::updateReaderDataInputWidget(StateReaderType stat
         case Cpu:
         case Disk:
         case Network: {
-            evaluatorDataInput1 = new QDoubleSpinBox(evaluatorDataInputWidget);
-            evaluatorDataInput2 = new QDoubleSpinBox(evaluatorDataInputWidget);
+            evaluatorDataInput1 = new QDoubleSpinBox(this);
+            evaluatorDataInput2 = new QDoubleSpinBox(this);
         }
             break;
         case StrShell: {
             // TODO: Set it so str shell only works with exactly as otherwise, it doesn't really make sense
-            evaluatorDataInput1 = new QLineEdit(evaluatorDataInputWidget);
-            evaluatorDataInput2 = new QLineEdit(evaluatorDataInputWidget);
+            evaluatorDataInput1 = new QLineEdit(this);
+            evaluatorDataInput2 = new QLineEdit(this);
         }
 
     }
@@ -317,14 +339,14 @@ void StateMonitorCreatorWidget::updateReaderDataInputWidget(StateReaderType stat
     evaluatorDataInputLayout->addWidget(evaluatorDataInput1);
     evaluatorDataInputLayout->addWidget(evaluatorDataInput2);
 
-    updateEvaluatorDataInputWidget(currentStateEvaluatorType);
+    updateDataInputs(currentStateEvaluatorType);
 
     // TODO: Also show current reading of state monitor
 }
 
-void StateMonitorCreatorWidget::updateEvaluatorDataInputWidget(StateEvaluatorType stateEvaluatorType) {
-    currentStateEvaluatorType = stateEvaluatorType;
-    switch (stateEvaluatorType) {
+void StateMonitorCreatorWidget::updateDataInputs(StateEvaluatorType newStateEvaluatorType) {
+    currentStateEvaluatorType = newStateEvaluatorType;
+    switch (newStateEvaluatorType) {
         case InRange:
             evaluatorDataInput1->setEnabled(true);
             evaluatorDataInput2->setEnabled(true);
