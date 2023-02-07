@@ -1,10 +1,8 @@
 #pragma once
 
-#include <QApplication>
 #include <QItemDelegate>
-#include <QPushButton>
-#include <QDir>
-#include <QtSvg>
+
+#include <QtSvg> // not currently used, but should be
 #include <QSvgRenderer>
 
 #include "main_state_monitor_widget.h"

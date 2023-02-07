@@ -2,7 +2,7 @@
 
 void StateMonitorWidgetDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                                        const QModelIndex &index) const {
-    // TODO: Figure out how to draw icons with svgs instead of png
+    // TODO: draw icons using svg instead of png
     switch (index.column()) {
         case 4: {
             QRect rect = option.rect;
