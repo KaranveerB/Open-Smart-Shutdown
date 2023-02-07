@@ -11,7 +11,7 @@ public:
 
     ~ThreadPool();
 
-    void enqueueTask(const std::function<void()>& task);
+    void enqueueTask(const std::function<void()> &task);
 
 private:
     std::vector<std::thread> workers;
