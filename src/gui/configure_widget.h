@@ -1,17 +1,20 @@
 #pragma once
 
-#include <QComboBox>
 #include <QDialog>
 #include <QDialogButtonBox>
+#include <QTime>
+
+#include <QComboBox>
 #include <QLabel>
 #include <QTextEdit>
-#include <QTime>
 #include <QTimeEdit>
-#include <QVBoxLayout>
 #include <QPushButton>
 
-#include "state_monitor/state_monitor_manager.h"
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+
 #include "events/event_triggers.h"
+#include "state_monitor/state_monitor_manager.h"
 
 class ConfigureWidget : public QDialog {
 Q_OBJECT

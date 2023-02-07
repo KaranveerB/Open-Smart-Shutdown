@@ -6,7 +6,6 @@ ConfigureWidget::ConfigureWidget(StateMonitorManager::Configuration config, QWid
     auto *mainLayout = new QVBoxLayout(this);
 
     auto *activationDelayLayout = new QHBoxLayout();
-
     mainLayout->addLayout(activationDelayLayout);
 
     auto *activationDelayLabel = new QLabel("Activation delay: ", this);
@@ -26,7 +25,6 @@ ConfigureWidget::ConfigureWidget(StateMonitorManager::Configuration config, QWid
     triggerActionLayout->addWidget(triggerActionLabel);
 
     triggerActionComboBox = new QComboBox(this);
-
     triggerActionComboBox->addItem("Hibernate", QVariant::fromValue(EventTriggers::Action::Hibernate));
     triggerActionComboBox->addItem("Notify", QVariant::fromValue(EventTriggers::Action::Notify));
     triggerActionComboBox->addItem("Sleep", QVariant::fromValue(EventTriggers::Action::Sleep));
@@ -51,7 +49,7 @@ ConfigureWidget::ConfigureWidget(StateMonitorManager::Configuration config, QWid
     });
 
     triggerActionComboBox->setCurrentIndex(
-            triggerActionComboBox->findData(QVariant::fromValue(config.triggerAction))
+          triggerActionComboBox->findData(QVariant::fromValue(config.triggerAction))
     );
 
     auto *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
