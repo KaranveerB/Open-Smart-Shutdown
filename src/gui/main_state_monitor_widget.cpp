@@ -3,6 +3,7 @@
 // TODO: Add edit button
 
 MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(parent) {
+    // | type | name            | value | state | delBtn |
     QStringList headerLabels;
     headerLabels << tr("Type") << tr("Name") << tr("Value") << tr("State") << tr("");
 
@@ -32,8 +33,8 @@ MainStateMonitorWidget::MainStateMonitorWidget(QWidget *parent) : QTreeWidget(pa
     QObject::connect(this, &QTreeWidget::itemClicked, this, &MainStateMonitorWidget::handleItemClicked);
 }
 
-void
-MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm, StateMonitorCreatorWidget::StateMonitorMetaInfo metaInfo) {
+void MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm,
+                                             const StateMonitorCreatorWidget::StateMonitorMetaInfo &metaInfo) {
     unsigned int id = stateMonitorManager.addStateMonitor(sm, metaInfo.bufferSize);
     auto *newStateMonitorTracker = new StateMonitorTracker(id, stateMonitorManager, this);
 
@@ -81,7 +82,7 @@ bool MainStateMonitorWidget::toggleStart() {
 int MainStateMonitorWidget::getRow(StateMonitorTracker *caller) {
     for (unsigned int i = 0; i < stateMonitorTrackers.size(); i++) {
         if (stateMonitorTrackers.at(i) == caller) {
-            return i;
+            return (int) i;
         }
     }
 
@@ -93,7 +94,7 @@ void MainStateMonitorWidget::handleItemClicked(QTreeWidgetItem *item, int column
         int row = indexOfTopLevelItem(item);
         takeTopLevelItem(row);
         auto *stateMonitorTracker = stateMonitorTrackers.at(row);
-	    stateMonitorTracker->deleteStateMonitorTracker();
+        stateMonitorTracker->deleteStateMonitorTracker();
         stateMonitorTrackers.erase(stateMonitorTrackers.begin() + row);
         delete item;
     }
@@ -120,7 +121,7 @@ void MainStateMonitorWidget::updateStateMonitorTrackerState(QString state) {
 
 }
 
-void MainStateMonitorWidget::updateStateMonitorTrackerStateValue(QString stateValue) {
+void MainStateMonitorWidget::updateStateMonitorTrackerStateValue(const QString &stateValue) {
     int row = getRow((StateMonitorTracker *) sender());
 
     QTreeWidgetItem *item = topLevelItem(row);
