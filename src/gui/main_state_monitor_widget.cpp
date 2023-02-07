@@ -93,7 +93,7 @@ void MainStateMonitorWidget::handleItemClicked(QTreeWidgetItem *item, int column
         int row = indexOfTopLevelItem(item);
         takeTopLevelItem(row);
         auto *stateMonitorTracker = stateMonitorTrackers.at(row);
-        stateMonitorTracker->deleteStateMonitor();
+	    stateMonitorTracker->deleteStateMonitorTracker();
         stateMonitorTrackers.erase(stateMonitorTrackers.begin() + row);
         delete item;
     }
