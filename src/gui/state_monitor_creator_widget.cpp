@@ -63,7 +63,7 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
     mainLayout->addWidget(pollingIntervalSpinBox);
 
     // divider
-    addDivider();
+    insertDivider();
 
     // StateReader config area
     auto *readerTypeSelector = new QComboBox(this);
@@ -86,7 +86,7 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
     mainLayout->addWidget(readerDataInput);
 
     // divider
-    addDivider();
+    insertDivider();
 
     // StateEvaluator config area
     auto *evaluatorTypeSelector = new QComboBox(this);
@@ -136,7 +136,7 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
     smCreatorButtonLayout->addWidget(cancelButton);
 }
 
-void StateMonitorCreatorWidget::addDivider() {
+void StateMonitorCreatorWidget::insertDivider() {
     auto *divider = new QFrame();
     divider->setFrameShape(QFrame::HLine);
     divider->setFrameShadow(QFrame::Sunken);

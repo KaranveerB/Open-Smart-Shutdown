@@ -42,7 +42,7 @@ private slots:
     void updateDataInputs(StateEvaluatorType newStateEvaluatorType);
 
 private:
-    void addDivider();
+    void insertDivider();
 
     template<class T>
     StateEvaluator<T> *createStateEvaluator() const;
