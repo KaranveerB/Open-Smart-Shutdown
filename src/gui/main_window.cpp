@@ -4,18 +4,16 @@ MainWindow::MainWindow() : QMainWindow() {
     setWindowTitle("Open Smart Shutdown");
     resize(600, 600);
 
+    // set up main (central) widget
     auto *mainWidget = new QWidget(this);
     auto *mainLayout = new QVBoxLayout(mainWidget);
+    setCentralWidget(mainWidget);
 
     mainStateMonitorWidget = new MainStateMonitorWidget;
     mainLayout->addWidget(mainStateMonitorWidget);
 
-    QObject::connect(mainStateMonitorWidget, &MainStateMonitorWidget::timeTillEventTriggerUpdated,
-                     this, &MainWindow::updateTimeTillEventTrigger);
-
-    auto *configureOptionsWidget = new QWidget(this);
-    auto *configureOptionsLayout = new QHBoxLayout(configureOptionsWidget);
-    mainLayout->addWidget(configureOptionsWidget);
+    auto *configureOptionsLayout = new QHBoxLayout(mainWidget);
+    mainLayout->addLayout(configureOptionsLayout);
 
     auto *addStateMonitorButton = new QPushButton("Add state monitor", this);
     auto *configureButton = new QPushButton("Configure", this);
@@ -33,8 +31,11 @@ MainWindow::MainWindow() : QMainWindow() {
     QObject::connect(toggleActiveButton, &QPushButton::pressed, this,
                      &MainWindow::toggleStart);
 
-    setCentralWidget(mainWidget);
+    // connect signals to update the countdown timer on the start button
+    QObject::connect(mainStateMonitorWidget, &MainStateMonitorWidget::timeTillEventTriggerUpdated,
+                     this, &MainWindow::updateTimeTillEventTrigger);
 
+    // other operations (such as notification and shell) will still work even if shutdown privileges aren't obtained
     if (!EventTriggers::acquireShutdownPrivilege()) {
         QMessageBox::critical(this, "Error",
                               "Could not acquire shutdown privilege. Shutdown, hibernate, and sleep may not work. "
@@ -43,9 +44,7 @@ MainWindow::MainWindow() : QMainWindow() {
 }
 
 void MainWindow::updateTimeTillEventTrigger(QTime timeRemaining) {
-    QString str = "Running (";
-    str += timeRemaining.toString("mm:ss");
-    str += ")";
+    QString str = "Running (" + timeRemaining.toString("mm:ss") + ")";
     toggleActiveButton->setText(str);
 }
 

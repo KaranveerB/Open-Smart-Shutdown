@@ -2,12 +2,13 @@
 
 #include <chrono>
 
-#include <QHBoxLayout>
-#include <QListWidget>
+#include <QTime>
 #include <QMainWindow>
 #include <QMessageBox>
+
 #include <QPushButton>
-#include <QTime>
+
+#include <QHBoxLayout>
 #include <QVBoxLayout>
 
 #include "configure_widget.h"
@@ -22,8 +23,10 @@ public:
     void toggleStart();
 
 public slots:
+
     void updateTimeTillEventTrigger(QTime timeRemaining);
+
 private:
-    QPushButton* toggleActiveButton;
-    MainStateMonitorWidget* mainStateMonitorWidget;
+    QPushButton *toggleActiveButton;
+    MainStateMonitorWidget *mainStateMonitorWidget;
 };
