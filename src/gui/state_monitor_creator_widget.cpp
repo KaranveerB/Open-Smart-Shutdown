@@ -136,88 +136,6 @@ StateMonitorCreatorWidget::StateMonitorCreatorWidget(QWidget *parent) : QDialog(
     smCreatorButtonLayout->addWidget(cancelButton);
 }
 
-void StateMonitorCreatorWidget::insertDivider() {
-    auto *divider = new QFrame();
-    divider->setFrameShape(QFrame::HLine);
-    divider->setFrameShadow(QFrame::Sunken);
-    mainLayout->addWidget(divider);
-}
-
-template<class T>
-StateEvaluator<T> *StateMonitorCreatorWidget::createStateEvaluator() const {
-    throw std::runtime_error("unknown type for creating evaluator");
-}
-
-template<>
-StateEvaluator<float> *StateMonitorCreatorWidget::createStateEvaluator<float>() const {
-    float data1;
-    float data2;
-
-    auto *data1Input = (QDoubleSpinBox *) evaluatorDataInput1;
-    auto *data2Input = (QDoubleSpinBox *) evaluatorDataInput2;
-    data1 = (float) data1Input->value();
-
-    if (currentStateEvaluatorType == StateEvaluatorType::InRange) {
-        data2 = (float) data2Input->value();
-    }
-
-    return createStateEvaluator<float>(data1, data2);
-
-}
-
-template<>
-StateEvaluator<std::string> *StateMonitorCreatorWidget::createStateEvaluator<std::string>() const {
-    std::string data1;
-    std::string data2;
-
-    auto *data1Input = (QLineEdit *) evaluatorDataInput1;
-    auto *data2Input = (QLineEdit *) evaluatorDataInput2;
-    data1 = data1Input->text().toStdString();
-
-    if (currentStateEvaluatorType == StateEvaluatorType::InRange) {
-        data2 = data2Input->text().toStdString();
-    }
-
-    return createStateEvaluator<std::string>(data1, data2);
-
-}
-
-template<>
-StateEvaluator<QTime> *StateMonitorCreatorWidget::createStateEvaluator<QTime>() const {
-    QTime data1;
-    QTime data2;
-
-    auto *data1Input = (QTimeEdit *) evaluatorDataInput1;
-    auto *data2Input = (QTimeEdit *) evaluatorDataInput2;
-    data1 = data1Input->time();
-
-    if (currentStateEvaluatorType == StateEvaluatorType::InRange) {
-        data2 = data2Input->time();
-    }
-
-    return createStateEvaluator<QTime>(data1, data2);
-
-}
-
-template<class T>
-StateEvaluator<T> *StateMonitorCreatorWidget::createStateEvaluator(T data1, T data2) const {
-    switch (currentStateEvaluatorType) {
-        case InRange:
-            return new InRangeStateEvaluator<T>(data1, data2);
-        case Greater:
-            return new GreaterThanStateEvaluator<T>(data1);
-        case Less:
-            return new LessThanStateEvaluator<T>(data1);
-        case GreaterOrEqual:
-            return new GreaterThanEqualStateEvaluator<T>(data1);
-        case LessOrEqual:
-            return new LessThanEqualStateEvaluator<T>(data1);
-        case Equal:
-            return new EqualStateEvaluator<T>(data1);
-    }
-    throw std::runtime_error("could not create state evaluator");
-}
-
 
 IStateMonitor *StateMonitorCreatorWidget::getStateMonitor() const {
     auto pollingInterval = std::chrono::milliseconds(pollingIntervalSpinBox->value());
@@ -263,13 +181,6 @@ IStateMonitor *StateMonitorCreatorWidget::getStateMonitor() const {
     }
 
     throw std::runtime_error("could not create state monitor");
-}
-
-
-QTime StateMonitorCreatorWidget::truncateQTimeToMinutes(QTime time) {
-    time = time.addSecs(-time.second());
-    time = time.addMSecs(-time.msec());
-    return time;
 }
 
 StateMonitorCreatorWidget::StateMonitorMetaInfo StateMonitorCreatorWidget::getStateMonitorMetaInfo() const {
@@ -356,4 +267,93 @@ void StateMonitorCreatorWidget::updateDataInputs(StateEvaluatorType newStateEval
             evaluatorDataInput2->setEnabled(false);
 
     }
+}
+
+void StateMonitorCreatorWidget::insertDivider() {
+    auto *divider = new QFrame();
+    divider->setFrameShape(QFrame::HLine);
+    divider->setFrameShadow(QFrame::Sunken);
+    mainLayout->addWidget(divider);
+}
+
+template<class T>
+StateEvaluator<T> *StateMonitorCreatorWidget::createStateEvaluator() const {
+    throw std::runtime_error("unknown type for creating evaluator");
+}
+
+template<>
+StateEvaluator<float> *StateMonitorCreatorWidget::createStateEvaluator<float>() const {
+    float data1;
+    float data2;
+
+    auto *data1Input = (QDoubleSpinBox *) evaluatorDataInput1;
+    auto *data2Input = (QDoubleSpinBox *) evaluatorDataInput2;
+    data1 = (float) data1Input->value();
+
+    if (currentStateEvaluatorType == StateEvaluatorType::InRange) {
+        data2 = (float) data2Input->value();
+    }
+
+    return createStateEvaluator<float>(data1, data2);
+
+}
+
+template<>
+StateEvaluator<std::string> *StateMonitorCreatorWidget::createStateEvaluator<std::string>() const {
+    std::string data1;
+    std::string data2;
+
+    auto *data1Input = (QLineEdit *) evaluatorDataInput1;
+    auto *data2Input = (QLineEdit *) evaluatorDataInput2;
+    data1 = data1Input->text().toStdString();
+
+    if (currentStateEvaluatorType == StateEvaluatorType::InRange) {
+        data2 = data2Input->text().toStdString();
+    }
+
+    return createStateEvaluator<std::string>(data1, data2);
+
+}
+
+template<>
+StateEvaluator<QTime> *StateMonitorCreatorWidget::createStateEvaluator<QTime>() const {
+    QTime data1;
+    QTime data2;
+
+    auto *data1Input = (QTimeEdit *) evaluatorDataInput1;
+    auto *data2Input = (QTimeEdit *) evaluatorDataInput2;
+    data1 = data1Input->time();
+
+    if (currentStateEvaluatorType == StateEvaluatorType::InRange) {
+        data2 = data2Input->time();
+    }
+
+    return createStateEvaluator<QTime>(data1, data2);
+
+}
+
+template<class T>
+StateEvaluator<T> *StateMonitorCreatorWidget::createStateEvaluator(T data1, T data2) const {
+    switch (currentStateEvaluatorType) {
+        case InRange:
+            return new InRangeStateEvaluator<T>(data1, data2);
+        case Greater:
+            return new GreaterThanStateEvaluator<T>(data1);
+        case Less:
+            return new LessThanStateEvaluator<T>(data1);
+        case GreaterOrEqual:
+            return new GreaterThanEqualStateEvaluator<T>(data1);
+        case LessOrEqual:
+            return new LessThanEqualStateEvaluator<T>(data1);
+        case Equal:
+            return new EqualStateEvaluator<T>(data1);
+    }
+    throw std::runtime_error("could not create state evaluator");
+}
+
+
+QTime StateMonitorCreatorWidget::truncateQTimeToMinutes(QTime time) {
+    time = time.addSecs(-time.second());
+    time = time.addMSecs(-time.msec());
+    return time;
 }
