@@ -1,5 +1,5 @@
 # Open Smart Shutdown
-See [current state](#current-state) before using.
+### See [current state](#current-state) before using.
 
 A Qt based cross-platform open source tool to automate conditional shutdowns, similar to [AMP WinOFF](http://www.ampsoft.net/utilities/WinOFF.php).
 
