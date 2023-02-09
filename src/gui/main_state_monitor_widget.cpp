@@ -58,7 +58,7 @@ void MainStateMonitorWidget::addStateMonitor(IStateMonitor *sm,
 }
 
 bool MainStateMonitorWidget::toggleStart() {
-    return stateMonitorManager.toggleStart();
+    return stateMonitorManager.toggleActive();
 }
 
 void MainStateMonitorWidget::createNewStateMonitor() {
