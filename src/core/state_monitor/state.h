@@ -1,8 +1,9 @@
 #pragma once
 
+#include <utility>
+
 #include <QObject>
 #include <QString>
-#include <utility>
 
 class State : public QObject {
 Q_OBJECT
