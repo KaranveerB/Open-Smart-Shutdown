@@ -35,7 +35,7 @@ public slots:
 
     void updateStateMonitorTrackerState(QString state);
 
-    void updateStateMonitorTrackerStateValue(const QString& stateValue);
+    void updateStateMonitorTrackerStateValue(const QString &stateValue);
 
     void updateTimeTillEventTrigger(QTime timeRemaining);
 

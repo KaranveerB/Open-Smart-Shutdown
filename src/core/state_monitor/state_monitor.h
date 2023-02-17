@@ -29,8 +29,8 @@ public:
 
     StateMonitor(StateReader<T> *stateReader, StateEvaluator<T> *stateEvaluator,
                  std::chrono::duration<int64_t, std::milli> pollingInterval) : stateReader{stateReader},
-                                                                   stateEvaluator{stateEvaluator},
-                                                                   pollingInterval{pollingInterval} {
+                                                                               stateEvaluator{stateEvaluator},
+                                                                               pollingInterval{pollingInterval} {
         if (stateReader == nullptr || stateEvaluator == nullptr) {
             throw std::logic_error("can't create state monitor with nullptr state reader or state evaluator");
         }
@@ -51,7 +51,7 @@ private:
     StateReader<T> *stateReader;
     StateEvaluator<T> *stateEvaluator;
     T prevStateValue;
-    std::chrono::duration<int64_t, std::milli> pollingInterval = std::chrono::milliseconds (1000);
+    std::chrono::duration<int64_t, std::milli> pollingInterval = std::chrono::milliseconds(1000);
 };
 
 #include "state_monitor.tpp"

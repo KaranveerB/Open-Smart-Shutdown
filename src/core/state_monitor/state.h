@@ -34,8 +34,8 @@ public:
     void setError();
 
 private:
-	StateStatus state = Waiting;
-	std::string stateValueString;
+    StateStatus state = Waiting;
+    std::string stateValueString;
 
     unsigned int baseBufferCount;
     unsigned int bufferCount;

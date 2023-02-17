@@ -17,8 +17,8 @@
 namespace Wmi {
     struct Win32_PerfFormattedData_PerfDisk_PhysicalDisk {
         Win32_PerfFormattedData_PerfDisk_PhysicalDisk() :
-                DiskWriteBytesPerSec(),
-                Name() {}
+              DiskWriteBytesPerSec(),
+              Name() {}
 
         void setProperties(const WmiResult &result, std::size_t index) {
             result.extract(index, "DiskWriteBytesPerSec", (*this).DiskWriteBytesPerSec);
@@ -36,8 +36,8 @@ namespace Wmi {
 
     struct Win32_PerfFormattedData_Tcpip_NetworkInterface {
         Win32_PerfFormattedData_Tcpip_NetworkInterface() :
-        BytesTotalPerSec(),
-        Name() {}
+              BytesTotalPerSec(),
+              Name() {}
 
         void setProperties(const WmiResult &result, std::size_t index) {
             result.extract(index, "BytesTotalPerSec", (*this).BytesTotalPerSec);

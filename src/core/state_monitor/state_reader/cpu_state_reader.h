@@ -18,6 +18,7 @@ public:
 #endif
         // TODO: do other OSes
     }
+
     float getStateValue() const override {
         return sysMon->getCpuUsage();
     };
