@@ -1,13 +1,14 @@
 #pragma once
 
-#include <thread>
-#include <mutex>
+#include <condition_variable>
 #include <functional>
+#include <mutex>
 #include <queue>
+#include <thread>
 
 class ThreadPool {
 public:
-    ThreadPool(size_t numThreads);
+    explicit ThreadPool(size_t numThreads);
 
     ~ThreadPool();
 
