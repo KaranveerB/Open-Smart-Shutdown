@@ -15,61 +15,30 @@ public:
         Error
     } StateStatus;
 
-    State(unsigned int baseBufferCount = 3) : baseBufferCount(baseBufferCount), bufferCount(baseBufferCount) {}
+    State(unsigned int baseBufferCount = 3);
 
-    StateStatus getState() const {
-        return state;
-    }
+    StateStatus getState() const;
 
-    void update(bool isActive) {
-        if (isActive && state != StateStatus::Active) {
-            state = StateStatus::Active;
-            bufferCount = baseBufferCount;
-        } else if (!isActive && state != StateStatus::Inactive) {
-            if (baseBufferCount > 0 && state != StateStatus::Waiting && state != StateStatus::Error) {
-                state = StateStatus::Buffered;
-                bufferCount--;
-                if (bufferCount == 0) {
-                    state = StateStatus::Inactive;
-                }
-            } else {
-                state = StateStatus::Inactive;
-            }
-        }
-    }
+    void update(bool isActive);
 
-    std::string getStateValueString() const {
-        return stateValueString;
-    }
+    std::string getStateValueString() const;
 
-    void setStateValueString(std::string newStateValueString) {
-        stateValueString = std::move(newStateValueString);
-    }
+    void setStateValueString(std::string newStateValueString);
 
-    unsigned int getBufferCount() {
-        return bufferCount;
-    }
+    unsigned int getBufferCount() const;
 
-    void scheduleForDeletion() {
-        scheduledForDeletion = true;
-    }
+    void scheduleForDeletion();
 
-    bool isScheduledForDeletion() {
-        return scheduledForDeletion;
-    }
+    bool isScheduledForDeletion();
 
-    void setError() {
-        state = Error;
-    }
+    void setError();
 
 private:
+	StateStatus state = Waiting;
+	std::string stateValueString;
 
     unsigned int baseBufferCount;
     unsigned int bufferCount;
 
     bool scheduledForDeletion = false;
-
-    StateStatus state = Waiting;
-
-    std::string stateValueString;
 };
