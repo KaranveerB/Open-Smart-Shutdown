@@ -289,10 +289,7 @@ StateEvaluator<float> *StateMonitorCreatorWidget::createStateEvaluator<float>() 
     auto *data1Input = (QDoubleSpinBox *) evaluatorDataInput1;
     auto *data2Input = (QDoubleSpinBox *) evaluatorDataInput2;
     data1 = (float) data1Input->value();
-
-    if (currentStateEvaluatorType == StateEvaluatorType::InRange) {
-        data2 = (float) data2Input->value();
-    }
+    data2 = (float) data2Input->value();
 
     return createStateEvaluator<float>(data1, data2);
 
@@ -306,10 +303,7 @@ StateEvaluator<std::string> *StateMonitorCreatorWidget::createStateEvaluator<std
     auto *data1Input = (QLineEdit *) evaluatorDataInput1;
     auto *data2Input = (QLineEdit *) evaluatorDataInput2;
     data1 = data1Input->text().toStdString();
-
-    if (currentStateEvaluatorType == StateEvaluatorType::InRange) {
-        data2 = data2Input->text().toStdString();
-    }
+    data2 = data2Input->text().toStdString();
 
     return createStateEvaluator<std::string>(data1, data2);
 
@@ -323,10 +317,7 @@ StateEvaluator<QTime> *StateMonitorCreatorWidget::createStateEvaluator<QTime>() 
     auto *data1Input = (QTimeEdit *) evaluatorDataInput1;
     auto *data2Input = (QTimeEdit *) evaluatorDataInput2;
     data1 = data1Input->time();
-
-    if (currentStateEvaluatorType == StateEvaluatorType::InRange) {
-        data2 = data2Input->time();
-    }
+    data2 = data2Input->time();
 
     return createStateEvaluator<QTime>(data1, data2);
 
