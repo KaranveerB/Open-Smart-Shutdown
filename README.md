@@ -8,6 +8,8 @@ This can help in various cases such as
 * Shutdown after a render is finished (based on low CPU/GPU usage)
 * Shutdown after an upload finishes (based on low network usage)
 
+![example image](screenshots/example.png)
+
 This program also aims to allow you to do anything you can do with a shell in it,
 whether that be monitoring an event or performing a non-shutdown command.
 
