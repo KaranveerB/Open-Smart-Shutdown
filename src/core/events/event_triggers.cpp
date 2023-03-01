@@ -7,7 +7,7 @@ void EventTriggers::triggerEvent(EventTriggers::Action action, std::string shell
             // We do an aggressive (but graceful) shutdown becuase this should reliably shut down, even if user is afk
             ::InitiateShutdown(NULL, NULL, 30, SHUTDOWN_POWEROFF | SHUTDOWN_FORCE_SELF | SHUTDOWN_FORCE_OTHERS,
                                SHTDN_REASON_FLAG_PLANNED);
-#elif
+#else
 #error unsupported platform for shutdowns which is not handled yet
 #endif
 
@@ -15,14 +15,14 @@ void EventTriggers::triggerEvent(EventTriggers::Action action, std::string shell
         case Sleep: {
 #ifdef WIN32
             ::SetSuspendState(false, false, false);
-#elif
+#else
 #error unsupported platform for shutdowns which is not handled yet
 #endif
         }
         case Hibernate: {
 #ifdef WIN32
             ::SetSuspendState(true, false, false);
-#elif
+#else
 #error unsupported platform for shutdowns which is not handled yet
 #endif
         }
