@@ -42,7 +42,8 @@ The project is usable with several major drawbacks. If anyone wants to use this 
 issues, create an issue and I may deal with them.
 
 **Issues**
-- Using shell state monitors spawns a new shell every time on Windows. Shell things can be changed to use ProcessCreate to fix this
+- Using shell state monitors spawns a new shell every time on Windows and closes it once done (so most commands result in quick flashing console window).
+Shell things can be changed to use ProcessCreate to fix this
 
 **Major Unimplemented Aspects**
 - No cross-platform support
