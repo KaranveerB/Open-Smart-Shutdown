@@ -12,6 +12,7 @@ void EventTriggers::triggerEvent(EventTriggers::Action action, std::string shell
 #endif
 
         }
+		  break;
         case Sleep: {
 #ifdef WIN32
             ::SetSuspendState(false, false, false);
@@ -19,6 +20,7 @@ void EventTriggers::triggerEvent(EventTriggers::Action action, std::string shell
 #error unsupported platform for shutdowns which is not handled yet
 #endif
         }
+		  break;
         case Hibernate: {
 #ifdef WIN32
             ::SetSuspendState(true, false, false);
