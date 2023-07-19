@@ -117,13 +117,16 @@ void StateMonitorManager::scheduleStateReader(unsigned int id, IStateMonitor *st
 void StateMonitorManager::checkEventTriggerCondition() {
     // 1. readyForEventTrigger
     for (const auto &state: statesMap) {
-        if (state.second->getState() != State::StateStatus::Active || state.second->getState() != State::StateStatus::Buffered) {
-            if (readyForEventTrigger) {
-                readyForEventTrigger = false;
-                emit timeTillEventTriggerChanged(eventTriggerConfig.activationDelay);
-            }
-            return;
-        }
+	  	if (state.second->getState() == State::StateStatus::Active || state.second->getState() == State::StateStatus::Buffered) {
+			// state active, continue
+		} else {
+			// state inactive
+			if (readyForEventTrigger) {
+			  readyForEventTrigger = false;
+			  emit timeTillEventTriggerChanged(eventTriggerConfig.activationDelay);
+			}
+			return; // readyForEventTrigger requires no inactive states, thus we return without checking any more states
+		}
     }
 
     if (!readyForEventTrigger) {
