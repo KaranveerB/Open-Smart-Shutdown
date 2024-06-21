@@ -10,6 +10,11 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_PREFIX_PATH ${QT6_INSTALL_PATH})
 
+if(NOT CMAKE_BUILD_TYPE)
+        message(STATUS "No build type specified. Defaulting to Debug")
+        set(CMAKE_BUILD_TYPE "Debug")
+endif()
+
 include_directories(core gui wmi/include wmi-extended)
 
 find_package(Qt6 COMPONENTS

@@ -19,6 +19,9 @@ This can be used in cases like
 * Anything else you can do with a shell really. If you can monitor what you want in a shell 
 and you can perform the finish task in a shell, you should be able to do it in Open Smart Shutdown.
 
+# Building
+For build instructions, see `BUILD.md`.
+
 ## Goals of the Project
 ### Compatibility
 The program's defaults should work on a fresh Windows 10 and Ubuntu install (macOS is not included as I don't have a system to test on).
