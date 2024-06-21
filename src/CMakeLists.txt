@@ -10,8 +10,6 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_PREFIX_PATH ${QT6_INSTALL_PATH})
 
-set(CMAKE_CXX_FLAGS_RELEASE  "/O2")
-
 include_directories(core gui wmi/include wmi-extended)
 
 find_package(Qt6 COMPONENTS
